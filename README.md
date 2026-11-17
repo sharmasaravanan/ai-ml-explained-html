@@ -25,8 +25,8 @@ All `.html` modules are completely self-contained with zero external dependencie
 
 1. Clone or download this repository:
    ```bash
-   git clone https://github.com/<your-username>/<your-repo-name>.git
-   cd <your-repo-name>
+   git clone https://github.com/sharmasaravanan/ai-ml-explained-html.git
+   cd ai-ml-explained-html
    ```
 2. Open `01-ai-ml-dl.html` directly in any modern web browser and use the navigation links at the bottom of each page to progress through the course.
 
