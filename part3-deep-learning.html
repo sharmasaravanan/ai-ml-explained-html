@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Part 3: Deep Learning</title>
+<style>
+  :root{
+    --bg:#fafaf7; --card:#ffffff; --ink:#111827; --muted:#374151; --line:#d1d5db;
+    --accent:#1d4ed8; --accent-soft:#dbeafe; --warn:#b45309; --warn-soft:#fef3c7;
+    --ok:#047857; --ok-soft:#d1fae5; --code:#0f172a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  header{background:#fff;border-bottom:3px solid var(--ink);padding:40px 24px 28px}
+  .wrap{max-width:980px;margin:0 auto;padding:0 24px}
+  header .wrap{padding:0}
+  .tag{display:inline-block;background:var(--ink);color:#fff;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:4px}
+  h1{font-size:38px;line-height:1.2;margin:14px 0 8px}
+  header p{margin:0;color:var(--muted);font-size:18px;max-width:720px}
+  nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);z-index:10}
+  nav .wrap{display:flex;gap:8px;flex-wrap:wrap;padding:10px 24px}
+  nav a{color:var(--ink);text-decoration:none;font-weight:600;font-size:14px;padding:6px 12px;border:1.5px solid var(--ink);border-radius:999px}
+  nav a:hover{background:var(--ink);color:#fff}
+  section{padding:48px 0 12px}
+  .num{display:inline-block;background:var(--accent);color:#fff;font-weight:800;border-radius:8px;padding:2px 12px;margin-right:10px}
+  h2{font-size:30px;margin:0 0 6px;line-height:1.25}
+  .time{color:var(--muted);font-weight:600;font-size:15px;margin-bottom:18px}
+  h3{font-size:21px;margin:30px 0 8px}
+  p{margin:10px 0}
+  .card{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:20px 22px;margin:18px 0}
+  .goal{border-left:6px solid var(--accent);background:var(--accent-soft)}
+  .goal b{color:#1e3a8a}
+  .warn{border-left:6px solid var(--warn);background:var(--warn-soft)}
+  .ok{border-left:6px solid var(--ok);background:var(--ok-soft)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+  code,pre{font-family:"SF Mono",Consolas,Menlo,monospace}
+  code{background:#e5e7eb;color:var(--code);padding:1px 6px;border-radius:4px;font-size:.92em}
+  pre{background:#0f172a;color:#f8fafc;padding:16px 18px;border-radius:10px;overflow-x:auto;font-size:14.5px;line-height:1.55}
+  .eq{background:#fff;border:1.5px dashed var(--ink);border-radius:10px;padding:12px 18px;margin:14px 0;font-family:Georgia,"Times New Roman",serif;font-size:19px;text-align:center}
+  table{width:100%;border-collapse:collapse;margin:14px 0;background:#fff}
+  th,td{border:1.5px solid var(--line);padding:10px 12px;text-align:left;font-size:15.5px}
+  th{background:var(--ink);color:#fff}
+  ul,ol{padding-left:24px} li{margin:5px 0}
+  .lab{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:18px 20px;margin:20px 0}
+  .lab h4{margin:0 0 10px;font-size:17px;text-transform:uppercase;letter-spacing:.05em}
+  label{font-weight:600;font-size:15px}
+  input[type=range]{width:220px;vertical-align:middle}
+  button{font:inherit;font-weight:700;background:var(--ink);color:#fff;border:0;border-radius:8px;padding:8px 16px;cursor:pointer}
+  button:hover{background:var(--accent)}
+  canvas{background:#fff;border:1.5px solid var(--line);border-radius:8px;max-width:100%}
+  .row{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin:8px 0}
+  .readout{font-family:Consolas,monospace;font-weight:700;color:var(--accent)}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:14px 0}
+  .flow span{background:#fff;border:2px solid var(--ink);border-radius:8px;padding:6px 12px;font-weight:700;font-size:15px}
+  .flow i{font-style:normal;font-weight:800}
+  .cell{display:inline-block;width:46px;height:46px;line-height:46px;text-align:center;border:1px solid var(--ink);font-weight:700;font-family:Consolas,monospace}
+  .tok{display:inline-block;padding:4px 10px;margin:3px;border:2px solid var(--ink);border-radius:6px;font-weight:700;cursor:pointer;background:#fff}
+  .tok.sel{background:var(--ink);color:#fff}
+  footer{margin:56px 0 40px;padding-top:20px;border-top:2px solid var(--ink);color:var(--muted);font-size:15px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="tag">AI &amp; ML Course · Part 3</span>
+    <h1>Deep Learning</h1>
+    <p>From a single neuron to Transformers. Four topics, about 5 hours, each with an explainer, a live demo and a hands-on hook.</p>
+  </div>
+</header>
+
+<nav><div class="wrap">
+  <a href="#t9">9 · Neural Networks</a>
+  <a href="#t10">10 · CNNs</a>
+  <a href="#t11">11 · RNNs &amp; NLP</a>
+  <a href="#t12">12 · Transformers</a>
+  <a href="#recap">Recap</a>
+</div></nav>
+
+<div class="wrap">
+
+<!-- ================= TOPIC 9 ================= -->
+<section id="t9">
+  <h2><span class="num">9</span>Neural Networks from Scratch</h2>
+  <div class="time">≈ 1 hr 30 min · neurons, backpropagation, gradient descent</div>
+
+  <div class="card goal"><b>By the end:</b> you can explain what a neuron computes, how a network learns from its mistakes, and why gradient descent works.</div>
+
+  <h3>9.1 The neuron</h3>
+  <p>A neuron takes inputs, multiplies each by a weight, adds a bias, then passes the result through an activation function.</p>
+  <div class="eq">z = w₁x₁ + w₂x₂ + … + wₙxₙ + b &nbsp;&nbsp;→&nbsp;&nbsp; a = f(z)</div>
+  <div class="flow"><span>Inputs x</span><i>→</i><span>× weights w</span><i>→</i><span>+ bias b</span><i>→</i><span>Activation f</span><i>→</i><span>Output a</span></div>
+
+  <table>
+    <tr><th>Activation</th><th>Formula</th><th>Use it for</th></tr>
+    <tr><td>Sigmoid</td><td>1 / (1 + e⁻ᶻ)</td><td>Binary output probability</td></tr>
+    <tr><td>Tanh</td><td>(eᶻ − e⁻ᶻ)/(eᶻ + e⁻ᶻ)</td><td>Zero-centred hidden units (older nets, RNNs)</td></tr>
+    <tr><td>ReLU</td><td>max(0, z)</td><td>Default for hidden layers</td></tr>
+    <tr><td>Softmax</td><td>eᶻⁱ / Σ eᶻʲ</td><td>Multi-class output probabilities</td></tr>
+  </table>
+  <div class="card warn"><b>Why activations matter:</b> without a non-linear activation, stacking layers collapses into one linear function. Non-linearity is what lets depth add power.</div>
+
+  <h3>9.2 Layers and the forward pass</h3>
+  <p>Neurons are grouped into layers: input, one or more hidden layers, and an output layer. The forward pass pushes data through layer by layer to produce a prediction. A loss function (MSE for regression, cross-entropy for classification) measures how wrong that prediction is.</p>
+
+  <h3>9.3 Gradient descent</h3>
+  <p>Imagine standing on a foggy hill and stepping downhill. The gradient tells you the steepest uphill direction, so you move the opposite way.</p>
+  <div class="eq">w ← w − η · ∂L/∂w &nbsp;&nbsp;(η = learning rate)</div>
+
+  <div class="lab">
+    <h4>Live demo · Gradient descent on L(w) = (w − 3)²</h4>
+    <div class="row">
+      <label>Learning rate η: <span class="readout" id="lrv">0.10</span></label>
+      <input type="range" id="lr" min="0.01" max="1.05" step="0.01" value="0.10">
+      <button id="gdStep">Step</button><button id="gdReset">Reset</button>
+    </div>
+    <canvas id="gd" width="720" height="260"></canvas>
+    <div>w = <span class="readout" id="wv">-4.00</span> &nbsp; loss = <span class="readout" id="lv">49.00</span> &nbsp; step # <span class="readout" id="sv">0</span></div>
+    <p style="font-size:15px;color:var(--muted)">Try η = 0.01 (crawls), 0.1 (smooth), 0.95 (zig-zags) and 1.05 (diverges).</p>
+  </div>
+
+  <h3>9.4 Backpropagation</h3>
+  <p>Backprop is the chain rule applied efficiently. It computes how much each weight contributed to the loss, working backwards from the output.</p>
+  <ol>
+    <li><b>Forward:</b> compute activations layer by layer, store them.</li>
+    <li><b>Loss:</b> compare the prediction with the truth.</li>
+    <li><b>Backward:</b> compute ∂L/∂(output), then multiply by local derivatives layer by layer going backwards.</li>
+    <li><b>Update:</b> adjust every weight with gradient descent.</li>
+  </ol>
+  <div class="eq">∂L/∂w₁ = ∂L/∂a · ∂a/∂z · ∂z/∂w₁</div>
+
+  <h3>9.5 A network in about 20 lines of NumPy</h3>
+<pre>import numpy as np
+np.random.seed(0)
+X = np.array([[0,0],[0,1],[1,0],[1,1]]); y = np.array([[0],[1],[1],[0]])  # XOR
+
+W1, b1 = np.random.randn(2,4), np.zeros((1,4))
+W2, b2 = np.random.randn(4,1), np.zeros((1,1))
+sig = lambda z: 1/(1+np.exp(-z))
+
+for epoch in range(10000):
+    # forward
+    h = np.tanh(X @ W1 + b1)
+    p = sig(h @ W2 + b2)
+    # backward
+    dz2 = p - y                      # BCE + sigmoid shortcut
+    dW2 = h.T @ dz2;  db2 = dz2.sum(0, keepdims=True)
+    dz1 = (dz2 @ W2.T) * (1 - h**2)  # tanh derivative
+    dW1 = X.T @ dz1;  db1 = dz1.sum(0, keepdims=True)
+    # update
+    for P, G in ((W1,dW1),(b1,db1),(W2,dW2),(b2,db2)): P -= 0.1 * G
+
+print(p.round(2))   # ≈ [[0],[1],[1],[0]]</pre>
+  <div class="card ok"><b>Why XOR?</b> No single straight line separates XOR. A hidden layer solves it, which is the classic proof that depth matters.</div>
+
+  <h3>9.6 Training practicalities</h3>
+  <div class="grid">
+    <div class="card"><b>Optimisers</b><br>SGD, Momentum, Adam. Adam is the sensible default.</div>
+    <div class="card"><b>Batches &amp; epochs</b><br>Mini-batches (32–256) give noisy but fast updates. One epoch = one pass over the data.</div>
+    <div class="card"><b>Overfitting fixes</b><br>Dropout, weight decay, early stopping, more data.</div>
+    <div class="card"><b>Vanishing gradients</b><br>Deep sigmoid/tanh stacks shrink gradients. ReLU, good initialisation and normalisation help.</div>
+  </div>
+</section>
+
+<!-- ================= TOPIC 10 ================= -->
+<section id="t10">
+  <h2><span class="num">10</span>CNNs and Computer Vision</h2>
+  <div class="time">≈ 1 hr 15 min · convolution, pooling, architectures, transfer learning</div>
+
+  <div class="card goal"><b>By the end:</b> you understand why images need convolutions instead of plain dense layers, and can fine-tune a pretrained vision model.</div>
+
+  <h3>10.1 Why not a dense network?</h3>
+  <p>A 224×224 RGB image has 150,528 inputs. A single dense layer of 1,000 units would need about 150 million weights, and it would ignore the fact that nearby pixels relate to each other. CNNs exploit two ideas: <b>local connectivity</b> and <b>weight sharing</b>.</p>
+
+  <h3>10.2 The convolution operation</h3>
+  <p>A small filter (kernel) slides across the image. At each position, multiply element-wise and sum. The same filter is reused everywhere, so it detects one pattern (an edge, a corner, a texture) wherever it appears.</p>
+
+  <div class="lab">
+    <h4>Live demo · 3×3 filter on a 5×5 image</h4>
+    <div class="row">
+      <label>Filter:
+        <select id="kern" style="font:inherit;padding:4px">
+          <option value="v">Vertical edge</option>
+          <option value="h">Horizontal edge</option>
+          <option value="b">Blur</option>
+        </select>
+      </label>
+      <span>Click any output cell to see its calculation.</span>
+    </div>
+    <div class="row" style="align-items:flex-start;gap:30px">
+      <div><b>Input</b><div id="cin"></div></div>
+      <div><b>Filter</b><div id="ck"></div></div>
+      <div><b>Output (3×3)</b><div id="cout"></div></div>
+    </div>
+    <div id="cmsg" class="readout">Select an output cell.</div>
+  </div>
+
+  <h3>10.3 Building blocks</h3>
+  <table>
+    <tr><th>Layer</th><th>What it does</th><th>Key settings</th></tr>
+    <tr><td>Conv</td><td>Learns filters, produces feature maps</td><td>kernel size, stride, padding, #filters</td></tr>
+    <tr><td>ReLU</td><td>Adds non-linearity</td><td>none</td></tr>
+    <tr><td>Pooling</td><td>Downsamples, adds small-shift tolerance</td><td>max or average, 2×2</td></tr>
+    <tr><td>Flatten + Dense</td><td>Turns features into class scores</td><td>units, softmax</td></tr>
+    <tr><td>BatchNorm / Dropout</td><td>Stabilise and regularise training</td><td>momentum, rate</td></tr>
+  </table>
+  <div class="eq">output size = ⌊(N − K + 2P) / S⌋ + 1</div>
+  <div class="flow"><span>Image</span><i>→</i><span>Conv+ReLU</span><i>→</i><span>Pool</span><i>→</i><span>Conv+ReLU</span><i>→</i><span>Pool</span><i>→</i><span>Flatten</span><i>→</i><span>Dense</span><i>→</i><span>Softmax</span></div>
+  <p>Early layers learn edges, middle layers learn textures and parts, late layers learn whole objects.</p>
+
+  <h3>10.4 Landmark architectures</h3>
+  <table>
+    <tr><th>Model</th><th>Year</th><th>Idea worth remembering</th></tr>
+    <tr><td>LeNet</td><td>1998</td><td>First practical CNN (digits)</td></tr>
+    <tr><td>AlexNet</td><td>2012</td><td>ReLU, dropout, GPUs: deep learning breakout</td></tr>
+    <tr><td>VGG</td><td>2014</td><td>Stack many small 3×3 convs</td></tr>
+    <tr><td>ResNet</td><td>2015</td><td>Skip connections make 100+ layers trainable</td></tr>
+    <tr><td>EfficientNet</td><td>2019</td><td>Scale depth, width and resolution together</td></tr>
+  </table>
+
+  <h3>10.5 Beyond classification</h3>
+  <div class="grid">
+    <div class="card"><b>Classification</b><br>What is in the image?</div>
+    <div class="card"><b>Detection</b><br>What and where? (YOLO, Faster R-CNN)</div>
+    <div class="card"><b>Segmentation</b><br>Which class is each pixel? (U-Net)</div>
+  </div>
+
+  <h3>10.6 Transfer learning: the practical shortcut</h3>
+  <p>Rarely train from scratch. Start from a model pretrained on ImageNet, freeze the backbone, replace the final layer, train briefly, then optionally unfreeze and fine-tune with a small learning rate.</p>
+<pre>import torch.nn as nn
+from torchvision import models
+
+m = models.resnet18(weights="DEFAULT")
+for p in m.parameters(): p.requires_grad = False   # freeze backbone
+m.fc = nn.Linear(m.fc.in_features, num_classes)    # new head: train this only</pre>
+  <div class="card ok"><b>Data augmentation:</b> random flips, crops, rotations and colour jitter effectively multiply your dataset and reduce overfitting.</div>
+</section>
+
+<!-- ================= TOPIC 11 ================= -->
+<section id="t11">
+  <h2><span class="num">11</span>RNNs, Sequences and NLP Basics</h2>
+  <div class="time">≈ 1 hr 15 min · text as numbers, recurrence, LSTM/GRU, embeddings</div>
+
+  <div class="card goal"><b>By the end:</b> you can explain how text becomes numbers, how a recurrent network carries memory, and why its limits led to Transformers.</div>
+
+  <h3>11.1 From text to numbers</h3>
+  <ol>
+    <li><b>Tokenise:</b> split text into words or sub-words. "unhappiness" → "un", "happi", "ness".</li>
+    <li><b>Index:</b> map each token to an integer ID.</li>
+    <li><b>Embed:</b> map each ID to a learned dense vector, so similar words sit close together.</li>
+  </ol>
+  <table>
+    <tr><th>Approach</th><th>Captures meaning?</th><th>Note</th></tr>
+    <tr><td>One-hot / Bag-of-words</td><td>No</td><td>Huge sparse vectors, no order</td></tr>
+    <tr><td>TF-IDF</td><td>Weakly</td><td>Weights rare, informative words; strong classical baseline</td></tr>
+    <tr><td>Word2Vec / GloVe</td><td>Yes</td><td>One fixed vector per word</td></tr>
+    <tr><td>Contextual (BERT, GPT)</td><td>Yes, in context</td><td>Same word, different vector per sentence</td></tr>
+  </table>
+
+  <h3>11.2 The recurrent idea</h3>
+  <p>Sequences have order and variable length. An RNN reads one step at a time and carries a hidden state, a running summary of everything seen so far.</p>
+  <div class="eq">hₜ = tanh(Wₓ·xₜ + Wₕ·hₜ₋₁ + b)</div>
+  <div class="flow"><span>x₁</span><i>→</i><span>h₁</span><i>→</i><span>h₂ ← x₂</span><i>→</i><span>h₃ ← x₃</span><i>→</i><span>… → output</span></div>
+  <p>Training uses <b>backpropagation through time</b>: unroll the loop and backprop across every time step. Same weights are reused at each step.</p>
+
+  <div class="card warn"><b>The catch:</b> multiplying gradients across many steps makes them vanish (or explode). A plain RNN forgets things from 20+ steps ago.</div>
+
+  <h3>11.3 LSTM and GRU</h3>
+  <p>Gated cells decide what to remember, forget and output, giving gradients a more direct path.</p>
+  <div class="grid">
+    <div class="card"><b>LSTM</b><br>Cell state plus three gates: forget, input, output. Powerful, more parameters.</div>
+    <div class="card"><b>GRU</b><br>Two gates: reset and update. Simpler, often similar accuracy, faster.</div>
+  </div>
+
+  <h3>11.4 Common sequence tasks</h3>
+  <table>
+    <tr><th>Pattern</th><th>Example</th></tr>
+    <tr><td>Many → One</td><td>Sentiment of a review, spam detection</td></tr>
+    <tr><td>Many → Many (aligned)</td><td>Named entity tagging</td></tr>
+    <tr><td>Many → Many (seq2seq)</td><td>Machine translation, summarisation</td></tr>
+    <tr><td>One → Many</td><td>Caption generation</td></tr>
+  </table>
+
+<pre>import torch.nn as nn
+
+class SentimentLSTM(nn.Module):
+    def __init__(self, vocab, emb=128, hid=128):
+        super().__init__()
+        self.emb  = nn.Embedding(vocab, emb)
+        self.lstm = nn.LSTM(emb, hid, batch_first=True)
+        self.out  = nn.Linear(hid, 1)
+    def forward(self, x):
+        _, (h, _) = self.lstm(self.emb(x))   # h: last hidden state
+        return self.out(h[-1])               # logit</pre>
+
+  <h3>11.5 Why we moved on</h3>
+  <ul>
+    <li>Strictly sequential: step t needs step t−1, so training can't be parallelised across time.</li>
+    <li>Long-range dependencies are still hard.</li>
+    <li>In seq2seq, squeezing a whole sentence into one vector is a bottleneck. <b>Attention</b> was invented to fix exactly that.</li>
+  </ul>
+</section>
+
+<!-- ================= TOPIC 12 ================= -->
+<section id="t12">
+  <h2><span class="num">12</span>Transformers and Attention</h2>
+  <div class="time">≈ 1 hr 30 min · self-attention, multi-head, architecture, LLMs</div>
+
+  <div class="card goal"><b>By the end:</b> you can explain query/key/value attention, draw the Transformer block, and connect it to BERT and GPT-style models.</div>
+
+  <h3>12.1 The core idea</h3>
+  <p>Instead of reading word by word, let every token look at every other token at once and decide which ones matter. That is <b>self-attention</b>. In "The animal didn't cross the street because <i>it</i> was tired", attention lets "it" weigh "animal" heavily.</p>
+
+  <h3>12.2 Queries, keys and values</h3>
+  <p>Each token produces three vectors from learned projections:</p>
+  <ul>
+    <li><b>Query (Q):</b> what am I looking for?</li>
+    <li><b>Key (K):</b> what do I offer?</li>
+    <li><b>Value (V):</b> the information I pass along if selected.</li>
+  </ul>
+  <div class="eq">Attention(Q, K, V) = softmax( QKᵀ / √dₖ ) · V</div>
+  <ol>
+    <li>Score: dot product of each query with every key.</li>
+    <li>Scale by √dₖ to keep softmax stable.</li>
+    <li>Softmax turns scores into weights summing to 1.</li>
+    <li>Output is the weighted average of the values.</li>
+  </ol>
+
+  <div class="lab">
+    <h4>Live demo · Who does each word attend to?</h4>
+    <p>Click a word. Bar width shows illustrative attention weights (hand-set for teaching, not from a trained model).</p>
+    <div id="toks"></div>
+    <canvas id="att" width="720" height="250"></canvas>
+  </div>
+
+  <h3>12.3 Multi-head attention and position</h3>
+  <div class="grid">
+    <div class="card"><b>Multi-head</b><br>Run several attention operations in parallel, each in a smaller subspace. One head may track grammar, another coreference. Concatenate and project.</div>
+    <div class="card"><b>Positional encoding</b><br>Attention has no sense of order by itself, so position information (sinusoidal or learned) is added to the embeddings.</div>
+  </div>
+
+  <h3>12.4 The Transformer block</h3>
+  <div class="flow"><span>Input + position</span><i>→</i><span>Multi-head attention</span><i>→</i><span>Add &amp; Norm</span><i>→</i><span>Feed-forward</span><i>→</i><span>Add &amp; Norm</span><i>→</i><span>× N layers</span></div>
+  <p>Residual connections (Add) and layer normalisation keep very deep stacks trainable, the same trick as ResNet.</p>
+
+  <table>
+    <tr><th>RNN</th><th>Transformer</th></tr>
+    <tr><td>Sequential, slow to train</td><td>Fully parallel over the sequence</td></tr>
+    <tr><td>Memory fades over distance</td><td>Any token can attend to any other directly</td></tr>
+    <tr><td>Cost grows linearly with length</td><td>Attention cost grows with length², the main scaling limit</td></tr>
+  </table>
+
+  <h3>12.5 Three families</h3>
+  <table>
+    <tr><th>Type</th><th>Sees</th><th>Examples</th><th>Best at</th></tr>
+    <tr><td>Encoder-only</td><td>Whole input, both directions</td><td>BERT</td><td>Classification, search, embeddings</td></tr>
+    <tr><td>Decoder-only</td><td>Past tokens only (causal mask)</td><td>GPT family, Claude, Llama</td><td>Text generation, chat</td></tr>
+    <tr><td>Encoder-decoder</td><td>Input, then generates output</td><td>T5, original Transformer</td><td>Translation, summarisation</td></tr>
+  </table>
+  <p>Decoder-only models generate by repeatedly predicting the next token. Pretraining on huge text corpora, followed by instruction tuning and human-feedback alignment, produces today's LLMs.</p>
+
+  <h3>12.6 Hands-on hook</h3>
+<pre>from transformers import pipeline
+
+clf = pipeline("sentiment-analysis")
+print(clf("This course makes deep learning finally click."))
+
+# Inspect what a tokenizer does
+from transformers import AutoTokenizer
+tok = AutoTokenizer.from_pretrained("bert-base-uncased")
+print(tok.tokenize("Transformers are unbelievably parallel"))</pre>
+  <div class="card ok"><b>Fine-tuning vs prompting:</b> start with prompting or embeddings. Fine-tune only when you have labelled data and need consistent task-specific behaviour.</div>
+</section>
+
+<!-- ================= RECAP ================= -->
+<section id="recap">
+  <h2>Part 3 Recap</h2>
+  <table>
+    <tr><th>#</th><th>Topic</th><th>One-line takeaway</th></tr>
+    <tr><td>9</td><td>Neural networks</td><td>Layers of weighted sums + non-linearity, trained by backprop and gradient descent.</td></tr>
+    <tr><td>10</td><td>CNNs</td><td>Shared local filters exploit image structure; transfer learning is the practical route.</td></tr>
+    <tr><td>11</td><td>RNNs &amp; NLP</td><td>Hidden state gives memory; gating helps; sequential limits motivated attention.</td></tr>
+    <tr><td>12</td><td>Transformers</td><td>Self-attention processes all tokens in parallel and powers modern LLMs.</td></tr>
+  </table>
+  <footer>Part 3 of the 20-hour AI &amp; ML course · Deep Learning</footer>
+</section>
+
+</div>
+
+<script>
+/* ---------- Gradient descent demo ---------- */
+(function(){
+  const c=document.getElementById('gd'),x=c.getContext('2d');
+  const lr=document.getElementById('lr');
+  let w,step,trail;
+  const L=w=>(w-3)*(w-3), dL=w=>2*(w-3);
+  const X=v=>(v+6)/12*c.width, Y=v=>c.height-20-v/60*(c.height-40);
+  function reset(){w=-4;step=0;trail=[w];draw();}
+  function draw(){
+    x.clearRect(0,0,c.width,c.height);
+    x.strokeStyle='#111827';x.lineWidth=2.5;x.beginPath();
+    for(let v=-6;v<=12;v+=.1){const px=X(v),py=Y(Math.min(L(v),60));v===-6?x.moveTo(px,py):x.lineTo(px,py);}
+    x.stroke();
+    x.fillStyle='#047857';x.fillRect(X(3)-2,0,4,c.height);
+    trail.forEach((t,i)=>{x.fillStyle=i===trail.length-1?'#1d4ed8':'#93c5fd';x.beginPath();x.arc(X(t),Y(Math.min(L(t),60)),i===trail.length-1?9:5,0,7);x.fill();});
+    document.getElementById('wv').textContent=w.toFixed(2);
+    document.getElementById('lv').textContent=isFinite(L(w))?L(w).toFixed(2):'∞';
+    document.getElementById('sv').textContent=step;
+  }
+  document.getElementById('gdStep').onclick=()=>{w=w-parseFloat(lr.value)*dL(w);step++;trail.push(Math.max(-6,Math.min(12,w)));if(trail.length>40)trail.shift();draw();};
+  document.getElementById('gdReset').onclick=reset;
+  lr.oninput=()=>document.getElementById('lrv').textContent=parseFloat(lr.value).toFixed(2);
+  reset();
+})();
+
+/* ---------- Convolution demo ---------- */
+(function(){
+  const img=[[0,0,9,9,9],[0,0,9,9,9],[0,0,9,9,9],[0,0,9,9,9],[0,0,9,9,9]];
+  const K={v:[[-1,0,1],[-1,0,1],[-1,0,1]],h:[[-1,-1,-1],[0,0,0],[1,1,1]],b:[[1,1,1],[1,1,1],[1,1,1]]};
+  const sel=document.getElementById('kern');
+  const grid=(id,m,fn)=>{const el=document.getElementById(id);el.innerHTML='';m.forEach((r,i)=>{const d=document.createElement('div');d.style.whiteSpace='nowrap';r.forEach((v,j)=>{const s=document.createElement('span');s.className='cell';s.textContent=v;if(fn)fn(s,i,j);d.appendChild(s);});el.appendChild(d);});};
+  function conv(k){const o=[];for(let i=0;i<3;i++){o.push([]);for(let j=0;j<3;j++){let s=0;for(let a=0;a<3;a++)for(let b=0;b<3;b++)s+=img[i+a][j+b]*k[a][b];o[i].push(k===K.b?Math.round(s/9):s);}}return o;}
+  function render(){
+    const k=K[sel.value];
+    grid('cin',img,(s,i,j)=>{s.style.background='rgba(17,24,39,'+(img[i][j]/9*.85+.05)+')';s.style.color=img[i][j]>4?'#fff':'#111827';});
+    grid('ck',k,s=>{s.style.background='#fef3c7';});
+    const o=conv(k);
+    grid('cout',o,(s,i,j)=>{s.style.cursor='pointer';s.style.background='#dbeafe';s.onclick=()=>{
+      const terms=[];for(let a=0;a<3;a++)for(let b=0;b<3;b++)terms.push(img[i+a][j+b]+'×'+k[a][b]);
+      document.getElementById('cmsg').textContent='('+terms.join(' + ')+')'+(sel.value==='b'?' ÷ 9':'')+' = '+o[i][j];};});
+    document.getElementById('cmsg').textContent='Select an output cell.';
+  }
+  sel.onchange=render;render();
+})();
+
+/* ---------- Attention demo ---------- */
+(function(){
+  const words=['The','animal','did','not','cross','the','street','because','it','was','tired'];
+  const W={ 8:{1:.55,6:.15,8:.1,9:.1,10:.1}, 1:{0:.2,1:.3,4:.2,10:.3}, 4:{1:.4,6:.35,4:.15,3:.1},
+            10:{8:.3,1:.35,9:.2,10:.15}, 6:{5:.3,4:.3,6:.2,1:.2}, 9:{8:.4,10:.3,9:.3} };
+  const c=document.getElementById('att'),x=c.getContext('2d'),box=document.getElementById('toks');
+  let cur=8;
+  function weights(i){const w=Array(words.length).fill(.02);const m=W[i]||{};
+    if(!W[i]){w[i]=.4;if(i>0)w[i-1]=.3;if(i<words.length-1)w[i+1]=.2;}else for(const k in m)w[k]=m[k];
+    const s=w.reduce((a,b)=>a+b,0);return w.map(v=>v/s);}
+  function draw(){
+    x.clearRect(0,0,c.width,c.height);const w=weights(cur);
+    words.forEach((t,i)=>{const y=12+i*21;x.fillStyle='#111827';x.font='bold 14px sans-serif';x.fillText(t,10,y+13);
+      x.fillStyle='#e5e7eb';x.fillRect(100,y,520,16);
+      x.fillStyle=i===cur?'#047857':'#1d4ed8';x.fillRect(100,y,520*w[i],16);
+      x.fillStyle='#111827';x.fillText((w[i]*100).toFixed(0)+'%',630,y+13);});
+    [...box.children].forEach((b,i)=>b.classList.toggle('sel',i===cur));
+  }
+  words.forEach((t,i)=>{const b=document.createElement('span');b.className='tok';b.textContent=t;b.onclick=()=>{cur=i;draw();};box.appendChild(b);});
+  draw();
+})();
+</script>
+</body>
+</html>

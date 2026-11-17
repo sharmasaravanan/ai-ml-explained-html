@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 2 · The ML Workflow</title>
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fbfbf9;color:#0f172a;font:17px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+header.top{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #cbd5e1}
+.top-in{max-width:1000px;margin:auto;padding:10px 20px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.brand{font-weight:800;color:#0f172a}
+nav a{color:#1e293b;text-decoration:none;font-size:14px;margin-right:14px;font-weight:600}
+nav a:hover{color:#1d4ed8;text-decoration:underline}
+#bar{height:4px;background:#1d4ed8;width:0}
+main{max-width:1000px;margin:auto;padding:24px 20px 80px}
+.hero{background:#fff;border:2px solid #0f172a;border-radius:16px;padding:28px;margin-bottom:28px}
+.tag{display:inline-block;background:#1d4ed8;color:#fff;font-size:13px;font-weight:700;padding:3px 12px;border-radius:99px;letter-spacing:.04em}
+h1{font-size:34px;line-height:1.2;margin:12px 0 8px;color:#0f172a}
+h2{font-size:26px;margin:0 0 6px;color:#0f172a}
+h3{font-size:19px;margin:18px 0 6px;color:#0f172a}
+p{margin:8px 0;color:#1e293b}
+section{background:#fff;border:1px solid #cbd5e1;border-radius:14px;padding:26px;margin-bottom:26px}
+.lead{color:#334155;font-size:18px}
+ul{padding-left:22px;color:#1e293b}
+li{margin:4px 0}
+.goals{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:14px}
+.goal{background:#eff6ff;border:1px solid #93c5fd;border-radius:10px;padding:12px 14px;font-weight:600;color:#0f172a;font-size:15px}
+.note{background:#fffbeb;border-left:5px solid #b45309;padding:12px 16px;border-radius:8px;margin:14px 0;color:#1c1917}
+.tip{background:#ecfdf5;border-left:5px solid #047857;padding:12px 16px;border-radius:8px;margin:14px 0;color:#052e16}
+button{font:inherit;cursor:pointer}
+.btn{background:#fff;border:2px solid #0f172a;color:#0f172a;border-radius:10px;padding:8px 14px;font-weight:700;font-size:15px}
+.btn:hover{background:#0f172a;color:#fff}
+.btn.on{background:#1d4ed8;border-color:#1d4ed8;color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.panel{background:#f1f5f9;border:1px solid #94a3b8;border-radius:12px;padding:16px 18px;color:#0f172a}
+.pipe{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin:16px 0}
+.stage{flex:1 1 118px;background:#fff;border:2px solid #0f172a;border-radius:12px;padding:10px 8px;text-align:center;font-weight:700;font-size:14px;color:#0f172a;position:relative}
+.stage .n{display:block;width:28px;height:28px;line-height:28px;margin:0 auto 4px;border-radius:50%;background:#0f172a;color:#fff;font-size:14px}
+.stage.on{background:#1d4ed8;color:#fff;border-color:#1d4ed8}
+.stage.on .n{background:#fff;color:#1d4ed8}
+.stage:hover{box-shadow:0 0 0 3px #bfdbfe}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:12px}
+.fact{background:#fff;border:1px solid #94a3b8;border-radius:10px;padding:12px 14px;font-size:15px}
+.fact b{display:block;color:#1d4ed8;font-size:13px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.fact.warn b{color:#b91c1c}
+.code{background:#0f172a;color:#f8fafc;border-radius:12px;padding:16px;font-family:Consolas,Menlo,monospace;font-size:14.5px;overflow-x:auto;white-space:pre}
+.meter{background:#e2e8f0;border:1px solid #475569;border-radius:99px;height:30px;overflow:hidden;margin:6px 0 12px}
+.meter div{height:100%;color:#fff;font-weight:800;line-height:30px;padding-left:12px;transition:width .5s}
+.sc{font-size:19px;font-weight:700;margin:10px 0;color:#0f172a}
+.fb{min-height:48px;margin-top:10px;font-weight:600}
+.ok{color:#065f46}.bad{color:#991b1b}
+.q{border:1px solid #94a3b8;border-radius:12px;padding:14px 16px;margin:14px 0;background:#fff}
+.q p{font-weight:700;color:#0f172a}
+.q label{display:block;padding:7px 10px;border:1px solid #cbd5e1;border-radius:8px;margin:6px 0;cursor:pointer;color:#0f172a}
+.q label:hover{background:#eff6ff}
+.q .ex{margin-top:8px;font-size:15px;font-weight:600}
+.foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:10px}
+.foot a{color:#1d4ed8;font-weight:700;text-decoration:none}
+.exam{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px}
+.exam div{border:2px solid #0f172a;border-radius:12px;padding:14px;background:#fff}
+.exam b{font-size:18px;display:block;margin-bottom:4px}
+.big{font-size:40px;font-weight:800;color:#1d4ed8}
+label.sw{display:flex;gap:10px;align-items:center;font-weight:700;cursor:pointer;color:#0f172a}
+label.sw input{width:22px;height:22px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <span class="brand">AI &amp; ML Course · Part 1 · Module 2 of 3</span>
+    <nav>
+      <a href="#s-pipe">Pipeline</a><a href="#s-case">Case Study</a><a href="#s-split">Data Splits</a><a href="#s-leak">Leakage</a><a href="#s-loop">Iteration</a><a href="#s-quiz">Quiz</a>
+    </nav>
+  </div>
+  <div id="bar"></div>
+</header>
+
+<main>
+<div class="hero">
+  <span class="tag">PART 1 · FOUNDATIONS · ≈1 HOUR</span>
+  <h1>The ML Workflow</h1>
+  <p class="lead">Data → Features → Model → Evaluate → Deploy. Real projects spend far more time on the steps around the model than on the model itself. This module gives you the map you will follow for the rest of the course.</p>
+  <div class="goals">
+    <div class="goal">Name and order the seven stages of an ML project</div>
+    <div class="goal">Know the output and the typical mistake at every stage</div>
+    <div class="goal">Understand train, validation and test sets</div>
+    <div class="goal">Spot data leakage and know where to go back when things fail</div>
+  </div>
+</div>
+
+<!-- PIPELINE -->
+<section id="s-pipe">
+  <h2>1. The Seven Stages</h2>
+  <p><b>Click a stage</b> to see what happens there. Notice the arrows loop back: ML is iterative, not a straight line.</p>
+  <div class="pipe" id="pipe"></div>
+  <div class="panel" id="stageInfo"></div>
+  <div class="note"><b>Rule of thumb:</b> in industry, roughly 60–80% of effort goes into data collection, cleaning and feature work. Modelling is the shorter part.</div>
+</section>
+
+<!-- CASE STUDY -->
+<section id="s-case">
+  <h2>2. Worked Example: Predicting Customer Churn</h2>
+  <p>A telecom company wants to know <b>which customers will cancel next month</b>. Step through the project.</p>
+  <div class="row"><button class="btn" id="cPrev">← Back</button><button class="btn on" id="cNext">Next stage →</button></div>
+  <div class="panel" id="caseOut"></div>
+</section>
+
+<!-- SPLITS -->
+<section id="s-split">
+  <h2>3. Train, Validation and Test: The Exam Analogy</h2>
+  <p>A model must be judged on data it has <b>never seen</b>. Otherwise you only measure memory.</p>
+  <div class="exam">
+    <div><b>📘 Training set (≈60–70%)</b>Textbook and practice problems. The model learns from this.</div>
+    <div><b>📝 Validation set (≈15–20%)</b>Mock test. Used to compare models and tune settings (hyperparameters).</div>
+    <div><b>🎯 Test set (≈15–20%)</b>The final exam. Touched <u>once</u>, at the very end, to report honest performance.</div>
+  </div>
+  <div class="tip"><b>If you peek at the test set repeatedly</b> while tuning, it silently becomes a second validation set and your final score will be too optimistic.</div>
+  <div class="code">from sklearn.model_selection import train_test_split
+
+X_temp, X_test, y_temp, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+X_train, X_val, y_train, y_val = train_test_split(X_temp, y_temp, test_size=0.25, random_state=42, stratify=y_temp)
+# result: 60% train, 20% validation, 20% test</div>
+</section>
+
+<!-- LEAKAGE -->
+<section id="s-leak">
+  <h2>4. Danger Zone: Data Leakage</h2>
+  <p>Leakage means the model sees information during training that it would <b>not have at prediction time</b>. Scores look amazing in the notebook and collapse in production.</p>
+  <label class="sw"><input type="checkbox" id="leak"> Add the feature <code>refund_issued_after_cancel</code> to the churn model</label>
+  <div style="margin-top:14px">
+    <b>Accuracy on the test set</b>
+    <div class="meter"><div id="mTest" style="background:#1d4ed8"></div></div>
+    <b>Accuracy after deployment (real customers)</b>
+    <div class="meter"><div id="mProd" style="background:#047857"></div></div>
+  </div>
+  <div class="panel" id="leakMsg"></div>
+  <div class="note"><b>Other classic leaks:</b> scaling or imputing on the full dataset before splitting; using future data in time-series; duplicate rows landing in both train and test; features derived from the label.</div>
+</section>
+
+<!-- ITERATION -->
+<section id="s-loop">
+  <h2>5. Where Do You Go Back To?</h2>
+  <p>Something went wrong. Which stage should you revisit first? Score: <span id="gScore" class="big" style="font-size:26px">0</span> / 6</p>
+  <div class="sc" id="gQ"></div>
+  <div class="row" id="gBtns"></div>
+  <div class="fb" id="gFb"></div>
+  <button class="btn" id="gNext" style="display:none">Next problem →</button>
+</section>
+
+<!-- QUIZ -->
+<section id="s-quiz">
+  <h2>6. Check Your Understanding</h2>
+  <div id="quiz"></div>
+  <p><b id="qScore"></b></p>
+</section>
+
+<!-- BRIDGE -->
+<section id="s-code">
+  <h2>7. Hands-On Bridge</h2>
+  <p>In your notebook, label each block of code with one of the seven stages. Then answer:</p>
+  <ul>
+    <li>Where is the train/test split? Is anything fitted <i>before</i> it?</li>
+    <li>Which metric is used, and does it suit the problem?</li>
+    <li>What would you need to monitor once this model is deployed?</li>
+  </ul>
+  <div class="code">import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report
+
+df = pd.read_csv("churn.csv")                              # 2. collect
+df = df.drop_duplicates().dropna(subset=["churned"])         # 3. prepare
+X, y = df.drop(columns="churned"), df["churned"]             # 4. features
+X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)
+model = RandomForestClassifier(random_state=42).fit(X_tr, y_tr)   # 5. train
+print(classification_report(y_te, model.predict(X_te)))            # 6. evaluate
+# 7. deploy: save with joblib, serve via FastAPI, monitor drift</div>
+  <div class="foot"><a href="01-ai-ml-dl.html">← Previous: AI, ML and DL</a><a href="03-data-preprocessing.html">Next: Data and Preprocessing →</a></div>
+</section>
+</main>
+
+<script>
+addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('bar').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%'});
+
+const S=[
+{n:'1. Frame the problem',s:'Frame',w:'Turn a business goal into an ML task: what are we predicting, for whom, and how will it be used? Decide the success metric and what "good enough" means.',o:'A one-page problem definition with target variable and success metric',m:'Jumping to modelling without agreeing what success looks like',t:'Whiteboard, stakeholder interviews, baseline (what happens today?)'},
+{n:'2. Collect data',s:'Collect',w:'Gather data from databases, APIs, files, logs or labelling. Check that you have enough, that it is representative, and that you are allowed to use it.',o:'A raw dataset with a data dictionary',m:'Biased or unrepresentative samples; ignoring privacy and consent',t:'SQL, pandas, APIs, web scraping, labelling tools'},
+{n:'3. Prepare data',s:'Prepare',w:'Clean the data: fix types, remove duplicates, handle missing values and outliers, encode categories, scale numbers, and split into train, validation and test. (Module 3 goes deep here.)',o:'A clean, split dataset',m:'Fitting cleaning steps on the full data before splitting (leakage)',t:'pandas, NumPy, scikit-learn preprocessing'},
+{n:'4. Engineer features',s:'Features',w:'Create inputs that make patterns easier to learn: ratios, counts over time windows, date parts, text statistics, embeddings. Select the most useful ones.',o:'A feature matrix X and target y',m:'Using information that will not exist at prediction time',t:'pandas, scikit-learn, feature selection, domain knowledge'},
+{n:'5. Train models',s:'Train',w:'Fit one or more algorithms starting with a simple baseline. Tune hyperparameters using validation data or cross-validation.',o:'One or more trained model candidates',m:'Starting with a complex model before a simple baseline; overfitting',t:'scikit-learn, XGBoost, PyTorch, cross-validation'},
+{n:'6. Evaluate',s:'Evaluate',w:'Measure the chosen model on the untouched test set with metrics that match the business goal. Analyse errors, check fairness and compare with the baseline.',o:'An honest performance report and error analysis',m:'Using accuracy on imbalanced data; tuning on the test set',t:'Precision, recall, F1, ROC-AUC, RMSE, confusion matrix'},
+{n:'7. Deploy and monitor',s:'Deploy',w:'Package the model behind an API or batch job, then watch it. Data and behaviour change over time (drift), so models need monitoring and retraining.',o:'A live service, dashboards and a retraining plan',m:'Treating deployment as the end; no monitoring',t:'FastAPI, Docker, Kubernetes, MLflow, monitoring dashboards'}];
+const pipe=document.getElementById('pipe');
+S.forEach((s,i)=>{const d=document.createElement('button');d.className='stage';d.innerHTML=`<span class="n">${i+1}</span>${s.s}`;d.onclick=()=>pick(i);pipe.appendChild(d)});
+function pick(i){[...pipe.children].forEach((c,j)=>c.classList.toggle('on',i===j));const s=S[i];
+ document.getElementById('stageInfo').innerHTML=`<b style="font-size:20px">${s.n}</b><p>${s.w}</p><div class="facts"><div class="fact"><b>Output</b>${s.o}</div><div class="fact warn"><b>Typical mistake</b>${s.m}</div><div class="fact"><b>Tools</b>${s.t}</div></div>`}
+pick(0);
+
+/* case study */
+const C=[
+['Frame','Business goal: reduce cancellations. ML task: <b>binary classification</b> (will the customer churn in the next 30 days: yes or no). Success metric: <b>recall on churners</b> while keeping precision reasonable, because retention offers cost money. Baseline: today the team contacts customers at random.'],
+['Collect','Pull 24 months of data: billing history, plan type, support tickets, data usage, tenure and a <b>label</b> showing who actually cancelled. 120,000 customers; only 8% churned (an <b>imbalanced</b> dataset).'],
+['Prepare','Remove duplicate customers, fix inconsistent plan names ("Prepaid", "prepaid "), fill missing usage values with the median, one-hot encode plan type, scale numeric columns, then split 60/20/20 using <b>stratified</b> sampling so each part keeps about 8% churners.'],
+['Features','Create <code>tickets_last_30d</code>, <code>usage_change_vs_prev_month</code>, <code>months_since_plan_change</code> and <code>bill_to_usage_ratio</code>. Drop any column recorded <i>after</i> cancellation.'],
+['Train','Baseline: logistic regression. Then random forest and gradient boosting. Tune using the validation set. Random forest gives the best validation recall.'],
+['Evaluate','On the untouched test set: accuracy 93% (misleading, since predicting "no churn" for everyone gives 92%), <b>recall 71%</b>, precision 58%. Error analysis shows the model struggles with brand-new customers. These numbers are illustrative for teaching.'],
+['Deploy','Wrap the model in a FastAPI service that scores customers nightly. Marketing receives a ranked list. Monitor input drift and the monthly recall; retrain every quarter or when drift alerts fire.']];
+let ci=0;function cShow(){document.getElementById('caseOut').innerHTML=`<b style="font-size:19px">Stage ${ci+1} of ${C.length} · ${C[ci][0]}</b><p>${C[ci][1]}</p>`;document.getElementById('cPrev').style.visibility=ci?'visible':'hidden';document.getElementById('cNext').style.visibility=ci<C.length-1?'visible':'hidden'}
+document.getElementById('cPrev').onclick=()=>{ci--;cShow()};document.getElementById('cNext').onclick=()=>{ci++;cShow()};cShow();
+
+/* leakage */
+const lk=document.getElementById('leak');
+function leak(){const on=lk.checked;const a=on?99:81,b=on?64:79;
+ const t=document.getElementById('mTest'),p=document.getElementById('mProd');t.style.width=a+'%';t.textContent=a+'%';p.style.width=b+'%';p.textContent=b+'%';
+ document.getElementById('leakMsg').innerHTML=on?`<b style="color:#991b1b">Too good to be true.</b> The refund is issued <i>after</i> a customer cancels, so it reveals the answer. In production that field does not exist yet, so accuracy falls apart. <b>Rule:</b> if a result looks amazing, suspect leakage first.`:`<b style="color:#065f46">Honest pipeline.</b> The score is modest, but test and production performance agree. That is the sign of a trustworthy model. (Illustrative numbers.)`}
+lk.onchange=leak;leak();
+
+/* iteration game */
+const names=S.map(s=>s.s);
+const P=[
+['Training accuracy is 99% but test accuracy is only 72%.',4,'The model memorised the training data (overfitting). Go back to Train: simplify the model, regularise, or add data.'],
+['The model was great at launch, but three months later accuracy has steadily decayed.',6,'Customer behaviour changed (data drift). This is a Deploy and monitor issue: set up monitoring and scheduled retraining.'],
+['Stakeholders say: "Actually we only care about high-value customers who might leave."',0,'The goal changed. Go back to Frame the problem and redefine the target and metric.'],
+['40% of values in several columns are missing, making results unstable.',2,'Handling missing values belongs to Prepare data.'],
+['The model ignores order dates because they are stored as raw text strings.',3,'Turn the raw date into useful inputs such as month, weekday or days since last order: Engineer features.'],
+['Accuracy is 95%, but only 5% of customers ever churn, so the model is useless.',5,'Accuracy is the wrong metric for imbalanced data. Go to Evaluate and use recall, precision, F1 or PR-AUC.']];
+let gi=0,gs=0,lock=false;
+const gb=document.getElementById('gBtns');names.forEach((n,i)=>{const b=document.createElement('button');b.className='btn';b.textContent=n;b.onclick=()=>ans(i);gb.appendChild(b)});
+function gShow(){lock=false;document.getElementById('gQ').textContent=`${gi+1}. ${P[gi][0]}`;document.getElementById('gFb').textContent='';document.getElementById('gNext').style.display='none'}
+function ans(i){if(lock)return;lock=true;const ok=i===P[gi][1];if(ok)gs++;document.getElementById('gScore').textContent=gs;
+ document.getElementById('gFb').innerHTML=`<span class="${ok?'ok':'bad'}">${ok?'Correct. ':'Not quite. Best answer: '+names[P[gi][1]]+'. '}</span>${P[gi][2]}`;
+ const n=document.getElementById('gNext');n.style.display='inline-block';n.textContent=gi===P.length-1?'See result':'Next problem →'}
+document.getElementById('gNext').onclick=function(){if(gi===P.length-1){document.getElementById('gQ').textContent=`Final score: ${gs} / ${P.length}`;document.getElementById('gFb').textContent=gs>=5?'Great debugging instincts.':'Revisit the seven stages and try again.';this.textContent='Play again';this.onclick=()=>location.reload();return}gi++;gShow()};
+gShow();
+
+/* quiz */
+const Q=[
+['Which set should be used only once, at the very end?',['Training set','Validation set','Test set','All of them'],2,'The test set gives the final, unbiased estimate, so it is touched once.'],
+['What is data leakage?',['Losing data from the server','The model using information at training time that will not be available at prediction time','Sharing data publicly','Removing duplicate rows'],1,'Leakage inflates scores and fails in production.'],
+['Why start with a simple baseline model?',['It always wins','It gives a reference point and is quick to debug','Complex models are not allowed','It needs no data'],1,'A baseline tells you whether complexity is actually adding value.'],
+['Which stage includes monitoring for drift?',['Frame the problem','Prepare data','Evaluate','Deploy and monitor'],3,'Models degrade as the world changes, so monitoring continues after launch.'],
+['Roughly where does most project effort go?',['Algorithm selection','Data collection, cleaning and feature work','Writing the final report','Buying GPUs'],1,'Data work typically dominates ML project time.']];
+const qb=document.getElementById('quiz');let done=0,right=0;
+Q.forEach((q,i)=>{const d=document.createElement('div');d.className='q';d.innerHTML=`<p>${i+1}. ${q[0]}</p>`+q[1].map((o,j)=>`<label><input type="radio" name="q${i}" value="${j}"> ${o}</label>`).join('')+'<div class="ex"></div>';
+ d.querySelectorAll('input').forEach(inp=>inp.onchange=()=>{if(d.dataset.done)return;d.dataset.done=1;done++;const ok=+inp.value===q[2];if(ok)right++;d.querySelector('.ex').innerHTML=`<span class="${ok?'ok':'bad'}">${ok?'Correct. ':'Not quite. '}</span>${q[3]}`;d.querySelectorAll('input').forEach(x=>x.disabled=true);if(done===Q.length)document.getElementById('qScore').textContent=`Quiz score: ${right} / ${Q.length}`});
+ qb.appendChild(d)});
+</script>
+</body>
+</html>

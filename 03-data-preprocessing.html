@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 3 · Data and Preprocessing</title>
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fbfbf9;color:#0f172a;font:17px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+header.top{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #cbd5e1}
+.top-in{max-width:1000px;margin:auto;padding:10px 20px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.brand{font-weight:800;color:#0f172a}
+nav a{color:#1e293b;text-decoration:none;font-size:14px;margin-right:14px;font-weight:600}
+nav a:hover{color:#1d4ed8;text-decoration:underline}
+#bar{height:4px;background:#1d4ed8;width:0}
+main{max-width:1000px;margin:auto;padding:24px 20px 80px}
+.hero{background:#fff;border:2px solid #0f172a;border-radius:16px;padding:28px;margin-bottom:28px}
+.tag{display:inline-block;background:#1d4ed8;color:#fff;font-size:13px;font-weight:700;padding:3px 12px;border-radius:99px;letter-spacing:.04em}
+h1{font-size:34px;line-height:1.2;margin:12px 0 8px;color:#0f172a}
+h2{font-size:26px;margin:0 0 6px;color:#0f172a}
+h3{font-size:19px;margin:18px 0 6px;color:#0f172a}
+p{margin:8px 0;color:#1e293b}
+section{background:#fff;border:1px solid #cbd5e1;border-radius:14px;padding:26px;margin-bottom:26px}
+.lead{color:#334155;font-size:18px}
+ul{padding-left:22px;color:#1e293b}
+li{margin:4px 0}
+.goals{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:14px}
+.goal{background:#eff6ff;border:1px solid #93c5fd;border-radius:10px;padding:12px 14px;font-weight:600;color:#0f172a;font-size:15px}
+.note{background:#fffbeb;border-left:5px solid #b45309;padding:12px 16px;border-radius:8px;margin:14px 0;color:#1c1917}
+.tip{background:#ecfdf5;border-left:5px solid #047857;padding:12px 16px;border-radius:8px;margin:14px 0;color:#052e16}
+.danger{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px 16px;border-radius:8px;margin:14px 0;color:#450a0a}
+button{font:inherit;cursor:pointer}
+.btn{background:#fff;border:2px solid #0f172a;color:#0f172a;border-radius:10px;padding:8px 14px;font-weight:700;font-size:15px}
+.btn:hover{background:#0f172a;color:#fff}
+.btn.on{background:#1d4ed8;border-color:#1d4ed8;color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0;align-items:center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.panel{background:#f1f5f9;border:1px solid #94a3b8;border-radius:12px;padding:16px 18px;color:#0f172a}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:15px}
+th,td{border:1px solid #94a3b8;padding:8px 11px;text-align:left;color:#0f172a;vertical-align:top}
+th{background:#0f172a;color:#fff}
+tr:nth-child(even) td{background:#f8fafc}
+td.imp{background:#fef08a!important;font-weight:800}
+td.miss{background:#fecaca!important;font-weight:800;color:#7f1d1d}
+td.out{background:#fed7aa!important;font-weight:800}
+.stat{display:inline-block;background:#fff;border:2px solid #0f172a;border-radius:10px;padding:6px 14px;margin:4px 8px 4px 0;font-weight:700}
+.code{background:#0f172a;color:#f8fafc;border-radius:12px;padding:16px;font-family:Consolas,Menlo,monospace;font-size:14.5px;overflow-x:auto;white-space:pre}
+.bars{margin-top:8px}
+.bar{display:flex;align-items:center;gap:10px;margin:5px 0;font-size:14px;font-weight:600}
+.bar span.l{width:110px;flex:0 0 110px}
+.bar .fill{height:20px;border-radius:5px;min-width:3px;transition:width .4s}
+.bar .v{font-family:Consolas,monospace;font-size:13px}
+.dots{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;max-width:440px;margin:12px 0}
+.dot{aspect-ratio:1;border-radius:50%;border:2px solid #0f172a}
+.dot.tr{background:#93c5fd}
+.dot.te{background:#1d4ed8}
+.dot.pos{border-color:#b91c1c;border-width:3px}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;font-weight:600;margin-top:6px}
+.leg i{display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid #0f172a;vertical-align:-2px;margin-right:4px}
+input[type=range]{width:100%;max-width:380px;accent-color:#1d4ed8}
+label.sw{display:flex;gap:10px;align-items:center;font-weight:700;cursor:pointer;color:#0f172a}
+label.sw input{width:20px;height:20px}
+.q{border:1px solid #94a3b8;border-radius:12px;padding:14px 16px;margin:14px 0;background:#fff}
+.q p{font-weight:700;color:#0f172a}
+.q label{display:block;padding:7px 10px;border:1px solid #cbd5e1;border-radius:8px;margin:6px 0;cursor:pointer;color:#0f172a}
+.q label:hover{background:#eff6ff}
+.q .ex{margin-top:8px;font-size:15px;font-weight:600}
+.ok{color:#065f46}.bad{color:#991b1b}
+.foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:10px}
+.foot a{color:#1d4ed8;font-weight:700;text-decoration:none}
+.dis{color:#64748b;font-weight:700}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;background:#fff;border:2px solid #0f172a;border-radius:10px;padding:10px 14px 10px 52px;margin:8px 0;position:relative;font-weight:600}
+.steps li:before{content:counter(s);position:absolute;left:12px;top:9px;width:28px;height:28px;border-radius:50%;background:#1d4ed8;color:#fff;text-align:center;line-height:28px;font-weight:800}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <span class="brand">AI &amp; ML Course · Part 1 · Module 3 of 3</span>
+    <nav>
+      <a href="#s-why">Why</a><a href="#s-clean">Cleaning</a><a href="#s-miss">Missing</a><a href="#s-enc">Encoding</a><a href="#s-scale">Scaling</a><a href="#s-split">Split</a><a href="#s-quiz">Quiz</a>
+    </nav>
+  </div>
+  <div id="bar"></div>
+</header>
+
+<main>
+<div class="hero">
+  <span class="tag">PART 1 · FOUNDATIONS · ≈1 HOUR</span>
+  <h1>Data and Preprocessing</h1>
+  <p class="lead">"Garbage in, garbage out." Models only learn what the data shows them. This module covers how to turn raw, messy data into clean numeric input that algorithms can actually use.</p>
+  <div class="goals">
+    <div class="goal">Clean inconsistent text, duplicates and wrong types</div>
+    <div class="goal">Choose a strategy for missing values and outliers</div>
+    <div class="goal">Encode categories as numbers correctly</div>
+    <div class="goal">Scale features and split data without leakage</div>
+  </div>
+</div>
+
+<section id="s-why">
+  <h2>1. Why Preprocessing Matters</h2>
+  <p>Real data arrives with blank cells, typos, text where numbers should be, and columns on wildly different scales. Most algorithms need <b>numbers only</b>, without gaps, on comparable ranges.</p>
+  <p><b>The standard order of operations:</b></p>
+  <ol class="steps">
+    <li>Clean: fix types, duplicates, inconsistent text</li>
+    <li>Split into train and test <u>first</u></li>
+    <li>Handle missing values and outliers (learn the fill values from train only)</li>
+    <li>Encode categorical columns</li>
+    <li>Scale numeric columns (fit on train only)</li>
+  </ol>
+  <div class="danger"><b>Golden rule:</b> anything that <i>learns</i> from data (mean, median, min, max, category list) must be fitted on the <b>training set only</b> and then applied to the test set. Otherwise test information leaks into training.</div>
+</section>
+
+<section id="s-clean">
+  <h2>2. Cleaning Messy Data</h2>
+  <p>The same city appears as many different strings. The computer treats each spelling as a separate category. Click through the steps and watch the number of unique values fall.</p>
+  <div class="row">
+    <button class="btn on" data-c="0">Raw data</button>
+    <button class="btn" data-c="1">Trim spaces + fix case</button>
+    <button class="btn" data-c="2">Map typos and synonyms</button>
+  </div>
+  <div class="grid2">
+    <div id="cleanTable"></div>
+    <div class="panel"><div id="cleanStat"></div><p id="cleanMsg"></p></div>
+  </div>
+  <div class="code">df["city"] = df["city"].str.strip().str.title()
+df["city"] = df["city"].replace({"Chenai": "Chennai", "Bangalore": "Bengaluru"})
+df = df.drop_duplicates()
+df["age"] = pd.to_numeric(df["age"], errors="coerce")   # "N/A" becomes NaN</div>
+  <div class="note"><b>Quick checklist:</b> <code>df.info()</code> for types, <code>df.describe()</code> for ranges, <code>df.isna().sum()</code> for gaps, <code>df.duplicated().sum()</code> for repeats, <code>df[col].value_counts()</code> for category spelling.</div>
+</section>
+
+<section id="s-miss">
+  <h2>3. Missing Values and Outliers</h2>
+  <p>Ten customers' ages. Two are blank and one entry says <b>120</b>. Pick a strategy and watch what happens to the average age.</p>
+  <div class="row" id="missBtns">
+    <button class="btn on" data-m="drop">Drop rows</button>
+    <button class="btn" data-m="mean">Fill with mean</button>
+    <button class="btn" data-m="median">Fill with median</button>
+    <button class="btn" data-m="zero">Fill with 0</button>
+  </div>
+  <label class="sw"><input type="checkbox" id="outFix"> Treat age 120 as an error (mark as missing)</label>
+  <div id="missTable" style="overflow-x:auto"></div>
+  <div id="missStat" style="margin-top:10px"></div>
+  <div class="panel" id="missMsg" style="margin-top:10px"></div>
+  <div class="tip"><b>Rule of thumb:</b> drop rows only when few are missing and the loss is random. Use the <b>median</b> when outliers or skew exist, the mean for symmetric data, and add a "was_missing" flag column when the absence itself carries meaning.</div>
+  <div class="code">from sklearn.impute import SimpleImputer
+imp = SimpleImputer(strategy="median")
+X_train = imp.fit_transform(X_train)   # learn the median from train only
+X_test  = imp.transform(X_test)        # reuse the same median</div>
+</section>
+
+<section id="s-enc">
+  <h2>4. Encoding Categorical Data</h2>
+  <p>Algorithms cannot read "Mumbai". Choose the right encoding for the kind of category.</p>
+  <div class="row" id="encBtns">
+    <button class="btn on" data-e="label">Label encoding</button>
+    <button class="btn" data-e="onehot">One-hot encoding</button>
+    <button class="btn" data-e="ord">Ordinal encoding</button>
+  </div>
+  <div id="encTable" style="overflow-x:auto"></div>
+  <div class="panel" id="encMsg" style="margin-top:10px"></div>
+  <div class="code">from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
+ohe = OneHotEncoder(handle_unknown="ignore")
+X_city = ohe.fit_transform(X_train[["city"]])
+ordenc = OrdinalEncoder(categories=[["S","M","L","XL"]])
+X_size = ordenc.fit_transform(X_train[["size"]])</div>
+</section>
+
+<section id="s-scale">
+  <h2>5. Feature Scaling</h2>
+  <p>Age is in tens, salary in tens of thousands. Distance-based and gradient-based models are dominated by the larger numbers. Compare how <b>similar</b> customers look before and after scaling.</p>
+  <div class="row" id="scBtns">
+    <button class="btn on" data-s="none">No scaling</button>
+    <button class="btn" data-s="minmax">Min-Max (0 to 1)</button>
+    <button class="btn" data-s="std">Standardization (z-score)</button>
+  </div>
+  <div id="scTable" style="overflow-x:auto"></div>
+  <div class="grid2" style="margin-top:14px">
+    <div class="panel"><b>Distance A ↔ B</b><div id="dAB"></div><p style="font-size:14px">A and B differ by <b>20 years</b> in age but only ₹2,000 in salary.</p></div>
+    <div class="panel"><b>Distance A ↔ C</b><div id="dAC"></div><p style="font-size:14px">A and C are the same age group (5 years) but differ by <b>₹60,000</b> in salary.</p></div>
+  </div>
+  <div class="panel" id="scMsg" style="margin-top:12px"></div>
+  <table>
+    <tr><th>Method</th><th>Formula</th><th>Use when</th></tr>
+    <tr><td><b>Min-Max</b></td><td>(x − min) / (max − min)</td><td>You need a bounded 0–1 range (neural nets, image pixels). Sensitive to outliers.</td></tr>
+    <tr><td><b>Standardization</b></td><td>(x − mean) / std</td><td>Default choice for linear models, SVM, KNN, PCA.</td></tr>
+    <tr><td><b>No scaling</b></td><td>—</td><td>Tree-based models (decision tree, random forest, XGBoost) do not need it.</td></tr>
+  </table>
+  <div class="code">from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+X_train_s = scaler.fit_transform(X_train)   # fit on train ONLY
+X_test_s  = scaler.transform(X_test)        # apply the same mean and std</div>
+</section>
+
+<section id="s-split">
+  <h2>6. Train / Test Split</h2>
+  <p>Each circle is a customer. Red-outlined circles are <b>churners</b> (only 10 of 100, an imbalanced dataset). Drag the slider and shuffle.</p>
+  <div class="row"><b>Test size: <span id="tsv">20</span>%</b><input type="range" id="ts" min="10" max="50" step="5" value="20"></div>
+  <div class="row">
+    <label class="sw"><input type="checkbox" id="strat"> Stratified split</label>
+    <button class="btn" id="shuf">🔀 Shuffle</button>
+  </div>
+  <div class="dots" id="dots"></div>
+  <div class="leg"><span><i style="background:#93c5fd"></i>Train</span><span><i style="background:#1d4ed8"></i>Test</span><span><i style="background:#fff;border-color:#b91c1c;border-width:3px"></i>Churner</span></div>
+  <div id="splitStat" style="margin-top:10px"></div>
+  <div class="panel" id="splitMsg" style="margin-top:10px"></div>
+  <div class="code">X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y)</div>
+  <p><b>random_state</b> fixes the shuffle so results are reproducible. <b>stratify=y</b> keeps class proportions the same in both parts, which matters for imbalanced data.</p>
+</section>
+
+<section id="s-pipeline">
+  <h2>7. Putting It Together: A Leak-Proof Pipeline</h2>
+  <p>Scikit-learn's <code>Pipeline</code> and <code>ColumnTransformer</code> bundle every step so that fitting only ever touches training data.</p>
+  <div class="code">from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.linear_model import LogisticRegression
+
+num = Pipeline([("imp", SimpleImputer(strategy="median")),
+                ("sc",  StandardScaler())])
+cat = Pipeline([("imp", SimpleImputer(strategy="most_frequent")),
+                ("oh",  OneHotEncoder(handle_unknown="ignore"))])
+
+pre = ColumnTransformer([("num", num, num_cols),
+                         ("cat", cat, cat_cols)])
+
+clf = Pipeline([("pre", pre), ("model", LogisticRegression())])
+clf.fit(X_train, y_train)          # everything fitted on train only
+print(clf.score(X_test, y_test))   # test data is only transformed</div>
+</section>
+
+<section id="s-quiz">
+  <h2>8. Check Your Understanding</h2>
+  <div id="quiz"></div>
+  <p><b id="qScore"></b></p>
+</section>
+
+<section id="s-code">
+  <h2>9. Hands-On Bridge</h2>
+  <ul>
+    <li>Load the dataset from your notebook and run <code>df.info()</code>, <code>df.isna().sum()</code> and <code>df.describe()</code>.</li>
+    <li>Decide for each column: impute, encode, scale or leave alone. Justify each choice.</li>
+    <li>Build the pipeline above and compare model accuracy with and without scaling.</li>
+  </ul>
+  <div class="foot"><a href="02-ml-workflow.html">← Previous: The ML Workflow</a><span class="dis">Next: Part 2 · Regression →</span></div>
+</section>
+</main>
+
+<script>
+addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('bar').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%'});
+const $=id=>document.getElementById(id);
+const setOn=(box,btn)=>{[...box.querySelectorAll('.btn')].forEach(b=>b.classList.toggle('on',b===btn))};
+
+/* ---------- cleaning ---------- */
+const rawCity=['Chennai','chennai ','CHENNAI','Chenai','Bengaluru','bangalore','Bengaluru '];
+const fixes={'Chenai':'Chennai','Bangalore':'Bengaluru'};
+function cleanView(step){
+ const vals=rawCity.map(v=>{let x=v;if(step>=1)x=x.trim().toLowerCase().replace(/^./,c=>c.toUpperCase());if(step>=2&&fixes[x])x=fixes[x];return x});
+ $('cleanTable').innerHTML='<table><tr><th>#</th><th>city (as stored)</th></tr>'+vals.map((v,i)=>`<tr><td>${i+1}</td><td>"${v}"</td></tr>`).join('')+'</table>';
+ const u=new Set(vals).size;
+ $('cleanStat').innerHTML=`<span class="stat">Unique values: ${u}</span>`;
+ $('cleanMsg').innerHTML=['A model would see <b>7 different cities</b>, although there are really only 2. Trailing spaces and capital letters create fake categories.','Case and spaces are fixed (7 → 4). But "Chenai" is a typo and "Bangalore" is the older name of Bengaluru.','Now there are 2 clean categories. Always inspect <code>value_counts()</code> after cleaning to confirm.'][step];
+}
+document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{setOn(b.parentElement,b);cleanView(+b.dataset.c)});cleanView(0);
+
+/* ---------- missing values ---------- */
+const AGES=[25,32,null,41,29,null,38,120,27,35];
+let mStrat='drop';
+function missView(){
+ const fix=$('outFix').checked;const base=AGES.map((v,i)=>fix&&v===120?null:v);
+ const known=base.filter(v=>v!==null);
+ const mean=known.reduce((a,b)=>a+b,0)/known.length;
+ const sorted=[...known].sort((a,b)=>a-b);const mid=sorted.length/2;
+ const median=sorted.length%2?sorted[Math.floor(mid)]:(sorted[mid-1]+sorted[mid])/2;
+ let cells=[],out=[];
+ base.forEach((v,i)=>{
+  if(v!==null){cells.push({v,c:v===120?'out':''});out.push(v);return}
+  if(mStrat==='drop'){cells.push({v:'—',c:'miss'});return}
+  const f=mStrat==='mean'?+mean.toFixed(1):mStrat==='median'?median:0;
+  cells.push({v:f,c:'imp'});out.push(f);
+ });
+ $('missTable').innerHTML='<table><tr><th>Customer</th>'+cells.map((_,i)=>`<th>${i+1}</th>`).join('')+'</tr><tr><td><b>Age</b></td>'+cells.map(c=>`<td class="${c.c}">${c.v}</td>`).join('')+'</tr></table>';
+ const newMean=out.reduce((a,b)=>a+b,0)/out.length;
+ const so=[...out].sort((a,b)=>a-b),h=so.length/2;const newMed=so.length%2?so[Math.floor(h)]:(so[h-1]+so[h])/2;
+ $('missStat').innerHTML=`<span class="stat">Rows kept: ${out.length} / 10</span><span class="stat">Mean after: ${newMean.toFixed(1)}</span><span class="stat">Median after: ${newMed}</span>`;
+ const msg={
+  drop:'Two rows are lost (20% of the data). Fine if you have thousands of rows, painful with ten.',
+  mean:'Keeps all rows, but the mean is dragged upward by the 120 outlier. Tick the checkbox to see the mean become far more sensible.',
+  median:'The median is robust: it barely moves whether or not 120 is present. Often the safest default for numeric columns.',
+  zero:'Filling with 0 invents babies aged zero and pulls the average down sharply. Avoid unless 0 truly means "none".'}[mStrat];
+ $('missMsg').innerHTML='<b>What to notice:</b> '+msg+'<br><span style="font-size:14px"><span style="background:#fed7aa;padding:0 6px;border-radius:4px">orange</span> outlier · <span style="background:#fecaca;padding:0 6px;border-radius:4px">red</span> dropped · <span style="background:#fef08a;padding:0 6px;border-radius:4px">yellow</span> filled value</span>';
+}
+document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{mStrat=b.dataset.m;setOn($('missBtns'),b);missView()});
+$('outFix').onchange=missView;missView();
+
+/* ---------- encoding ---------- */
+const CITIES=['Chennai','Mumbai','Delhi','Mumbai','Chennai'];
+const SIZES=['M','S','XL','L','M'];
+function encView(k){
+ let html='',msg='';
+ if(k==='label'){
+  const m={Chennai:0,Delhi:1,Mumbai:2};
+  html='<table><tr><th>city</th><th>city_encoded</th></tr>'+CITIES.map(c=>`<tr><td>${c}</td><td>${m[c]}</td></tr>`).join('')+'</table>';
+  msg='<b>Problem for nominal data:</b> numbers imply order and distance. The model may conclude Mumbai (2) &gt; Delhi (1) &gt; Chennai (0), or that Delhi is "between" the others. Cities have no such order. Use label encoding for <b>target labels</b> or tree models, not for nominal inputs to linear models.';
+ }else if(k==='onehot'){
+  const cats=['Chennai','Delhi','Mumbai'];
+  html='<table><tr><th>city</th>'+cats.map(c=>`<th>is_${c}</th>`).join('')+'</tr>'+CITIES.map(c=>`<tr><td>${c}</td>`+cats.map(x=>`<td>${x===c?1:0}</td>`).join('')+'</tr>').join('')+'</table>';
+  msg='<b>Best default for nominal categories.</b> Each category gets its own 0/1 column, with no false ordering. Watch out for high-cardinality columns (thousands of values), which create thousands of columns. Consider grouping rare values or using target or embedding encodings.';
+ }else{
+  const m={S:0,M:1,L:2,XL:3};
+  html='<table><tr><th>size</th><th>size_encoded</th></tr>'+SIZES.map(c=>`<tr><td>${c}</td><td>${m[c]}</td></tr>`).join('')+'</table>';
+  msg='<b>Right choice when order is real:</b> S &lt; M &lt; L &lt; XL. You must supply the order yourself, because alphabetical order would be wrong. Other examples: education level, rating (poor, fair, good).';
+ }
+ $('encTable').innerHTML=html;$('encMsg').innerHTML=msg;
+}
+document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{setOn($('encBtns'),b);encView(b.dataset.e)});encView('label');
+
+/* ---------- scaling ---------- */
+const P=[['A',25,30000],['B',45,32000],['C',30,90000],['D',52,120000],['E',38,60000]];
+let sMode='none';
+function stats(i){const c=P.map(r=>r[i]);const mean=c.reduce((a,b)=>a+b,0)/c.length;const sd=Math.sqrt(c.reduce((a,b)=>a+(b-mean)**2,0)/c.length);return{mean,sd,min:Math.min(...c),max:Math.max(...c)}}
+function sc(v,i){const s=stats(i);if(sMode==='minmax')return (v-s.min)/(s.max-s.min);if(sMode==='std')return (v-s.mean)/s.sd;return v}
+function fmt(x){return sMode==='none'?x.toLocaleString('en-IN'):x.toFixed(2)}
+function scView(){
+ const rows=P.map(r=>[r[0],sc(r[1],1),sc(r[2],2)]);
+ $('scTable').innerHTML='<table><tr><th>Customer</th><th>age</th><th>salary</th></tr>'+rows.map(r=>`<tr><td>${r[0]}</td><td>${fmt(r[1])}</td><td>${fmt(r[2])}</td></tr>`).join('')+'</table>';
+ const d=(a,b)=>Math.hypot(rows[a][1]-rows[b][1],rows[a][2]-rows[b][2]);
+ const ab=d(0,1),ac=d(0,2),mx=Math.max(ab,ac);
+ const bar=(v,col)=>`<div class="bar"><div class="fill" style="width:${Math.max(3,v/mx*100)}%;background:${col}"></div><span class="v">${sMode==='none'?Math.round(v).toLocaleString('en-IN'):v.toFixed(2)}</span></div>`;
+ $('dAB').innerHTML=bar(ab,'#1d4ed8');$('dAC').innerHTML=bar(ac,'#b91c1c');
+ $('scMsg').innerHTML=sMode==='none'?'<b>Without scaling,</b> A↔C looks about 30 times "farther" than A↔B, purely because salary has bigger numbers. Age is effectively ignored by KNN, K-means or SVM.':'<b>After scaling,</b> both features contribute fairly. The 20-year age gap now matters, so A↔B is no longer treated as nearly identical. '+(sMode==='minmax'?'Min-Max squeezes each column into 0–1.':'Standardization centres each column at 0 with spread 1.');
+}
+document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{sMode=b.dataset.s;setOn($('scBtns'),b);scView()});scView();
+
+/* ---------- split ---------- */
+const LAB=Array.from({length:100},(_,i)=>i<10?1:0);
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function splitView(){
+ const pct=+$('ts').value;$('tsv').textContent=pct;const nTest=Math.round(100*pct/100);
+ const idx=Array.from({length:100},(_,i)=>i);let test=new Set();
+ if($('strat').checked){
+  const pos=shuffle(idx.filter(i=>LAB[i]===1)),neg=shuffle(idx.filter(i=>LAB[i]===0));
+  const tp=Math.round(10*pct/100);pos.slice(0,tp).forEach(i=>test.add(i));neg.slice(0,nTest-tp).forEach(i=>test.add(i));
+ }else shuffle(idx).slice(0,nTest).forEach(i=>test.add(i));
+ const order=shuffle(idx);
+ $('dots').innerHTML=idx.map(i=>`<div class="dot ${test.has(i)?'te':'tr'} ${LAB[i]?'pos':''}"></div>`).join('');
+ const tePos=[...test].filter(i=>LAB[i]===1).length,trPos=10-tePos;
+ const trN=100-nTest;
+ $('splitStat').innerHTML=`<span class="stat">Train: ${trN} rows · ${trPos} churners (${(trPos/trN*100).toFixed(1)}%)</span><span class="stat">Test: ${nTest} rows · ${tePos} churners (${(tePos/nTest*100).toFixed(1)}%)</span>`;
+ $('splitMsg').innerHTML=$('strat').checked?'<b>Stratified:</b> both sets keep roughly 10% churners, every time you shuffle. This is the safe default for classification.':'<b>Plain random split:</b> keep pressing Shuffle. The churner share in the test set swings (sometimes 0%!), so evaluation becomes unreliable. A test set with no churners cannot measure recall.';
+}
+$('ts').oninput=splitView;$('strat').onchange=splitView;$('shuf').onclick=splitView;splitView();
+
+/* ---------- quiz ---------- */
+const Q=[
+['Which statistic should be computed from the training set only?',['The mean used to fill missing values','The number of rows','The column names','The file size'],0,'Anything learned from data (mean, median, min, max, scaling parameters) must be fitted on train and reused on test.'],
+['City names (Chennai, Delhi, Mumbai) should usually be encoded with…',['Label encoding for a linear model','One-hot encoding','Dropping the column','Min-Max scaling'],1,'Cities are nominal with no order, so one-hot avoids a false ranking.'],
+['Which model type generally does NOT need feature scaling?',['K-Nearest Neighbours','SVM','Random forest','Neural network'],2,'Tree-based models split on thresholds, so scale does not matter.'],
+['Your data has a few extreme outliers. Which fill value for missing numbers is most robust?',['Mean','Median','Zero','Maximum'],1,'The median is barely affected by outliers.'],
+['Why use stratify=y in train_test_split for a 5% positive class?',['It speeds up training','It keeps the class proportions the same in train and test','It removes outliers','It scales features'],1,'Without stratification a small split may contain too few positives to evaluate.']];
+const qb=$('quiz');let done=0,right=0;
+Q.forEach((q,i)=>{const d=document.createElement('div');d.className='q';d.innerHTML=`<p>${i+1}. ${q[0]}</p>`+q[1].map((o,j)=>`<label><input type="radio" name="q${i}" value="${j}"> ${o}</label>`).join('')+'<div class="ex"></div>';
+ d.querySelectorAll('input').forEach(inp=>inp.onchange=()=>{if(d.dataset.done)return;d.dataset.done=1;done++;const ok=+inp.value===q[2];if(ok)right++;d.querySelector('.ex').innerHTML=`<span class="${ok?'ok':'bad'}">${ok?'Correct. ':'Not quite. '}</span>${q[3]}`;d.querySelectorAll('input').forEach(x=>x.disabled=true);if(done===Q.length)$('qScore').textContent=`Quiz score: ${right} / ${Q.length}`});
+ qb.appendChild(d)});
+</script>
+</body>
+</html>

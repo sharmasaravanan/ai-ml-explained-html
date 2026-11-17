@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 1 · What is AI, ML and Deep Learning</title>
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fbfbf9;color:#0f172a;font:17px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+header.top{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #cbd5e1}
+.top-in{max-width:1000px;margin:auto;padding:10px 20px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.brand{font-weight:800;color:#0f172a}
+nav a{color:#1e293b;text-decoration:none;font-size:14px;margin-right:14px;font-weight:600}
+nav a:hover{color:#1d4ed8;text-decoration:underline}
+#bar{height:4px;background:#1d4ed8;width:0}
+main{max-width:1000px;margin:auto;padding:24px 20px 80px}
+.hero{background:#fff;border:2px solid #0f172a;border-radius:16px;padding:28px;margin-bottom:28px}
+.tag{display:inline-block;background:#1d4ed8;color:#fff;font-size:13px;font-weight:700;padding:3px 12px;border-radius:99px;letter-spacing:.04em}
+h1{font-size:34px;line-height:1.2;margin:12px 0 8px;color:#0f172a}
+h2{font-size:26px;margin:0 0 6px;color:#0f172a}
+h3{font-size:19px;margin:18px 0 6px;color:#0f172a}
+p{margin:8px 0;color:#1e293b}
+section{background:#fff;border:1px solid #cbd5e1;border-radius:14px;padding:26px;margin-bottom:26px}
+.lead{color:#334155;font-size:18px}
+ul{padding-left:22px;color:#1e293b}
+li{margin:4px 0}
+.goals{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:14px}
+.goal{background:#eff6ff;border:1px solid #93c5fd;border-radius:10px;padding:12px 14px;font-weight:600;color:#0f172a;font-size:15px}
+.note{background:#fffbeb;border-left:5px solid #b45309;padding:12px 16px;border-radius:8px;margin:14px 0;color:#1c1917}
+.tip{background:#ecfdf5;border-left:5px solid #047857;padding:12px 16px;border-radius:8px;margin:14px 0;color:#052e16}
+button{font:inherit;cursor:pointer}
+.btn{background:#fff;border:2px solid #0f172a;color:#0f172a;border-radius:10px;padding:8px 14px;font-weight:700;font-size:15px}
+.btn:hover{background:#0f172a;color:#fff}
+.btn.on{background:#1d4ed8;border-color:#1d4ed8;color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:center}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.panel{background:#f1f5f9;border:1px solid #94a3b8;border-radius:12px;padding:16px 18px;min-height:150px;color:#0f172a}
+.panel b{color:#0f172a}
+.ring{cursor:pointer;transition:opacity .2s}
+.ring:hover{opacity:.85}
+.tl{display:flex;overflow-x:auto;gap:8px;padding:10px 2px 14px;border-bottom:3px solid #0f172a}
+.tl button{flex:0 0 auto;background:#fff;border:2px solid #475569;border-radius:10px;padding:8px 12px;font-weight:700;color:#0f172a;font-size:15px}
+.tl button.on{background:#0f172a;color:#fff;border-color:#0f172a}
+.tl button.winter{border-color:#1d4ed8;color:#1d4ed8}
+.tl button.winter.on{background:#1d4ed8;color:#fff}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:15px}
+th,td{border:1px solid #94a3b8;padding:9px 11px;text-align:left;color:#0f172a;vertical-align:top}
+th{background:#0f172a;color:#fff}
+tr:nth-child(even) td{background:#f8fafc}
+input[type=text]{width:100%;font:inherit;padding:10px 12px;border:2px solid #0f172a;border-radius:10px;color:#0f172a;background:#fff}
+.verdict{display:inline-block;padding:4px 12px;border-radius:99px;font-weight:800;font-size:14px;color:#fff}
+.spam{background:#b91c1c}.ham{background:#047857}
+.chips span{display:inline-block;border:1px solid #475569;border-radius:99px;padding:2px 10px;margin:3px;font-size:14px;background:#fff;color:#0f172a}
+.chips span.pos{background:#fee2e2;border-color:#b91c1c}
+.chips span.neg{background:#d1fae5;border-color:#047857}
+.sc{font-size:19px;font-weight:700;margin:10px 0;color:#0f172a}
+.fb{min-height:48px;margin-top:10px;font-weight:600}
+.ok{color:#065f46}.bad{color:#991b1b}
+.q{border:1px solid #94a3b8;border-radius:12px;padding:14px 16px;margin:14px 0;background:#fff}
+.q p{font-weight:700;color:#0f172a}
+.q label{display:block;padding:7px 10px;border:1px solid #cbd5e1;border-radius:8px;margin:6px 0;cursor:pointer;color:#0f172a}
+.q label:hover{background:#eff6ff}
+.q .ex{margin-top:8px;font-size:15px;font-weight:600}
+.code{background:#0f172a;color:#f8fafc;border-radius:12px;padding:16px;font-family:Consolas,Menlo,monospace;font-size:14.5px;overflow-x:auto;white-space:pre}
+.foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:10px}
+.foot a{color:#1d4ed8;font-weight:700;text-decoration:none}
+.dis{color:#64748b;font-weight:700}
+.big{font-size:40px;font-weight:800;color:#1d4ed8}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <span class="brand">AI &amp; ML Course · Part 1 · Module 1 of 3</span>
+    <nav>
+      <a href="#s-big">Big Picture</a><a href="#s-hist">History</a><a href="#s-types">Types of ML</a><a href="#s-spam">Rules vs Learning</a><a href="#s-game">Game</a><a href="#s-quiz">Quiz</a>
+    </nav>
+  </div>
+  <div id="bar"></div>
+</header>
+
+<main>
+<div class="hero">
+  <span class="tag">PART 1 · FOUNDATIONS · ≈1 HOUR</span>
+  <h1>What is AI, Machine Learning and Deep Learning?</h1>
+  <p class="lead">Three terms that are used interchangeably in the news but mean very different things. By the end of this module you will know exactly where each one fits.</p>
+  <div class="goals">
+    <div class="goal">Place AI, ML, DL and Generative AI in the right nesting order</div>
+    <div class="goal">Trace the key milestones and the AI winters</div>
+    <div class="goal">Tell supervised, unsupervised and reinforcement learning apart</div>
+    <div class="goal">Explain why ML replaces hand-written rules</div>
+  </div>
+</div>
+
+<!-- 1. BIG PICTURE -->
+<section id="s-big">
+  <h2>1. The Big Picture: Four Nested Ideas</h2>
+  <p>Think of Russian dolls. Each term sits inside the one before it. <b>Click a ring</b> to explore.</p>
+  <div class="grid2">
+    <svg viewBox="0 0 420 420" role="img" aria-label="Nested circles: AI contains ML contains DL contains Generative AI" style="width:100%;max-width:420px;margin:auto;display:block">
+      <circle class="ring" data-k="ai" cx="210" cy="210" r="200" fill="#dbeafe" stroke="#0f172a" stroke-width="3"/>
+      <circle class="ring" data-k="ml" cx="210" cy="260" r="145" fill="#bfdbfe" stroke="#0f172a" stroke-width="3"/>
+      <circle class="ring" data-k="dl" cx="210" cy="308" r="92" fill="#93c5fd" stroke="#0f172a" stroke-width="3"/>
+      <circle class="ring" data-k="gen" cx="210" cy="345" r="48" fill="#1d4ed8" stroke="#0f172a" stroke-width="3"/>
+      <g font-family="Segoe UI,Arial" font-weight="800" text-anchor="middle" pointer-events="none">
+        <text x="210" y="55" font-size="22" fill="#0f172a">Artificial Intelligence</text>
+        <text x="210" y="140" font-size="20" fill="#0f172a">Machine Learning</text>
+        <text x="210" y="248" font-size="18" fill="#0f172a">Deep Learning</text>
+        <text x="210" y="338" font-size="13" fill="#fff">Generative</text>
+        <text x="210" y="355" font-size="13" fill="#fff">AI / LLMs</text>
+      </g>
+    </svg>
+    <div class="panel" id="ringInfo"><b>Click any ring.</b><p>Start with the outermost circle, Artificial Intelligence, and work inward.</p></div>
+  </div>
+  <div class="note"><b>Common confusion:</b> not all AI is machine learning. A chess program with hand-coded rules is AI but not ML. A neural network that reads X-rays is AI, ML <i>and</i> deep learning.</div>
+
+  <h3>Side-by-side comparison</h3>
+  <table>
+    <tr><th></th><th>AI (broad)</th><th>Machine Learning</th><th>Deep Learning</th></tr>
+    <tr><td><b>Core idea</b></td><td>Machines that act intelligently</td><td>Learn patterns from data</td><td>Learn layered representations with neural networks</td></tr>
+    <tr><td><b>Needs data?</b></td><td>Not always (rules can be enough)</td><td>Yes, hundreds to millions of rows</td><td>Yes, usually very large datasets</td></tr>
+    <tr><td><b>Feature design</b></td><td>Hand-written logic</td><td>Humans engineer features</td><td>Features learned automatically</td></tr>
+    <tr><td><b>Hardware</b></td><td>Any</td><td>CPU is usually fine</td><td>GPU or TPU strongly preferred</td></tr>
+    <tr><td><b>Explainability</b></td><td>High for rules</td><td>Medium (trees, linear models are clear)</td><td>Low (black-box tendency)</td></tr>
+    <tr><td><b>Example</b></td><td>Rule-based chatbot, route planner</td><td>Churn prediction, credit scoring</td><td>Face recognition, speech to text, LLMs</td></tr>
+  </table>
+</section>
+
+<!-- 2. HISTORY -->
+<section id="s-hist">
+  <h2>2. A Short History: Hype, Winters and Breakthroughs</h2>
+  <p>AI progress came in waves. <span style="color:#1d4ed8;font-weight:800">Blue outlined</span> items are "AI winters": periods when funding and interest collapsed because results did not match promises.</p>
+  <div class="tl" id="tl"></div>
+  <div class="panel" id="tlInfo" style="margin-top:14px"></div>
+  <div class="tip"><b>Teaching takeaway:</b> every wave was triggered by the same three ingredients improving: <b>algorithms, data and compute</b>. Deep learning exploded after 2012 because GPUs and large datasets arrived together.</div>
+</section>
+
+<!-- 3. TYPES -->
+<section id="s-types">
+  <h2>3. Three Ways Machines Learn</h2>
+  <div class="row" id="typeBtns"></div>
+  <div class="panel" id="typeInfo"></div>
+  <div class="note"><b>Also worth knowing:</b> <i>semi-supervised</i> learning uses a few labels plus lots of unlabeled data. <i>Self-supervised</i> learning creates its own labels from the data (for example, predicting the next word), which is how modern LLMs are pre-trained.</div>
+</section>
+
+<!-- 4. RULES VS LEARNING -->
+<section id="s-spam">
+  <h2>4. Hand-Written Rules vs Learning from Data</h2>
+  <p>Traditional programming: <b>Data + Rules → Answers</b>. Machine learning flips it: <b>Data + Answers → Rules</b>.</p>
+  <p>Try it. Type a subject line and compare a rule-based spam filter with a tiny "learned" one.</p>
+  <input type="text" id="mail" value="Free winner! Claim your prize now" aria-label="Email subject">
+  <div class="row"><button class="btn" data-ex="Meeting moved to 3 pm tomorrow">Example 1</button><button class="btn" data-ex="Congratulations, free iPhone for the lucky winner">Example 2</button><button class="btn" data-ex="Free parking available at the venue">Example 3 (tricky)</button></div>
+  <div class="grid2" style="align-items:start">
+    <div class="panel"><b>Rule-based filter</b><p style="font-size:14px">Rule: if subject contains "free" or "winner" → spam</p><div id="ruleOut"></div></div>
+    <div class="panel"><b>Learned filter (word weights)</b><p style="font-size:14px">Weights were learned from labelled emails. Score above 0 → spam.</p><div id="mlOut"></div></div>
+  </div>
+  <div class="tip">Example 3 shows the point: the rule fires on "free" and wrongly flags a normal email. The learned model weighs <i>all</i> words, so "parking" and "venue" pull the score back. In real ML, those weights are found automatically by training, which is exactly what you will code in the hands-on labs.</div>
+</section>
+
+<!-- 5. GAME -->
+<section id="s-game">
+  <h2>5. Game: Which Type of Learning?</h2>
+  <p>Score: <span id="gScore" class="big" style="font-size:26px">0</span> / 8</p>
+  <div class="sc" id="gQ"></div>
+  <div class="row">
+    <button class="btn" data-a="sup">Supervised</button>
+    <button class="btn" data-a="uns">Unsupervised</button>
+    <button class="btn" data-a="rl">Reinforcement</button>
+  </div>
+  <div class="fb" id="gFb"></div>
+  <button class="btn" id="gNext" style="display:none">Next scenario →</button>
+</section>
+
+<!-- 6. QUIZ -->
+<section id="s-quiz">
+  <h2>6. Check Your Understanding</h2>
+  <div id="quiz"></div>
+  <p><b id="qScore"></b></p>
+</section>
+
+<!-- 7. CODE BRIDGE -->
+<section id="s-code">
+  <h2>7. Hands-On Bridge</h2>
+  <p>Now open the notebook for this module and connect it to the concepts above.</p>
+  <ul>
+    <li>Run a small supervised model (classification or regression) and identify the <b>features</b> and the <b>label</b>.</li>
+    <li>Run a clustering example and observe that no labels were provided.</li>
+    <li>Discuss: which of the three circles does each notebook cell belong to?</li>
+  </ul>
+  <div class="code"># The whole idea of supervised ML in four lines
+from sklearn.linear_model import LogisticRegression
+model = LogisticRegression()
+model.fit(X_train, y_train)      # learn rules from data + answers
+preds = model.predict(X_test)    # apply rules to new data</div>
+  <div class="foot"><span class="dis">← Start of course</span><a href="02-ml-workflow.html">Next: The ML Workflow →</a></div>
+</section>
+</main>
+
+<script>
+/* progress bar */
+addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('bar').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%'});
+
+/* nested circles */
+const ringData={
+ai:{t:'Artificial Intelligence',d:'Any technique that lets machines perform tasks that normally need human intelligence: reasoning, planning, perception, language. It includes rule-based systems, search and optimisation, not only learning.',e:'Chess engine with hand-written rules, GPS route planner, expert systems'},
+ml:{t:'Machine Learning',d:'A subset of AI where systems learn patterns from data instead of being explicitly programmed with rules. Performance improves with more and better data.',e:'Spam filter, churn prediction, credit scoring, recommendation engines'},
+dl:{t:'Deep Learning',d:'A subset of ML that uses neural networks with many layers. It learns useful features directly from raw data such as pixels, audio and text, which removes manual feature engineering.',e:'Face recognition, speech to text, medical image analysis, machine translation'},
+gen:{t:'Generative AI and LLMs',d:'Deep learning models that generate new content: text, images, code and audio. Large Language Models are trained on huge text corpora to predict the next token, and this simple objective leads to surprisingly general abilities.',e:'Chat assistants such as Claude, code assistants, image generators'}};
+document.querySelectorAll('.ring').forEach(r=>r.addEventListener('click',()=>{const d=ringData[r.dataset.k];document.getElementById('ringInfo').innerHTML=`<b style="font-size:19px">${d.t}</b><p>${d.d}</p><p><b>Examples:</b> ${d.e}</p>`}));
+
+/* timeline */
+const ev=[
+{y:'1950',t:'Turing proposes the imitation game',d:'Alan Turing publishes "Computing Machinery and Intelligence" and asks whether machines can think. The Turing Test becomes a famous benchmark idea.'},
+{y:'1956',t:'The term "AI" is born',d:'The Dartmouth workshop, organised by John McCarthy and colleagues, launches AI as a research field. Early optimism is huge.'},
+{y:'1958',t:'The Perceptron',d:'Frank Rosenblatt introduces the perceptron, a single artificial neuron that can learn from examples. It is the ancestor of today\'s neural networks.'},
+{y:'1974–80',t:'First AI Winter',d:'Systems failed to scale beyond toy problems, computers were too weak and critical reviews led to deep funding cuts.',w:1},
+{y:'1980s',t:'Expert systems and backprop',d:'Rule-based expert systems are used commercially. In 1986 the backpropagation algorithm is popularised by Rumelhart, Hinton and Williams, making multi-layer networks trainable.'},
+{y:'1987–93',t:'Second AI Winter',d:'Expert systems proved expensive and brittle, specialised hardware market collapsed and funding dried up again.',w:1},
+{y:'1997',t:'Deep Blue beats Kasparov',d:'IBM\'s Deep Blue defeats world chess champion Garry Kasparov. It relied mainly on brute-force search and hand-crafted evaluation, not learning.'},
+{y:'2012',t:'AlexNet and the deep learning boom',d:'A deep convolutional network wins the ImageNet competition by a large margin, trained on GPUs. Deep learning becomes the dominant approach in vision, then speech and language.'},
+{y:'2016',t:'AlphaGo beats Lee Sedol',d:'DeepMind\'s AlphaGo combines deep learning with reinforcement learning and defeats a top Go player, a game long thought to be decades away.'},
+{y:'2017',t:'The Transformer',d:'The paper "Attention Is All You Need" introduces the Transformer architecture. It is the foundation of nearly every modern language model.'},
+{y:'2020',t:'GPT-3 and scale',d:'GPT-3 with 175 billion parameters shows that scaling up models and data yields strong few-shot abilities.'},
+{y:'2022',t:'ChatGPT goes mainstream',d:'Conversational assistants reach hundreds of millions of users within months. Generative AI becomes a business priority worldwide.'},
+{y:'2023+',t:'Multimodal models and agents',d:'Models handle text, images, audio and code together, and are connected to tools to act as AI agents. You will build with these in Part 4.'}];
+const tl=document.getElementById('tl');
+ev.forEach((e,i)=>{const b=document.createElement('button');b.innerHTML=e.y+(e.w?' ❄':'');if(e.w)b.classList.add('winter');b.onclick=()=>show(i);tl.appendChild(b)});
+function show(i){[...tl.children].forEach((b,j)=>b.classList.toggle('on',i===j));const e=ev[i];document.getElementById('tlInfo').innerHTML=`<b style="font-size:19px">${e.y} · ${e.t}</b><p>${e.d}</p>`}
+show(0);
+
+/* ML types */
+const types={
+sup:{n:'Supervised',d:'The data comes with the right answers (labels). The model learns the mapping from inputs to outputs.',k:'Regression (predict a number) and Classification (predict a category)',e:'House price prediction, spam detection, disease diagnosis, loan default',a:'Features X + Labels y → Model'},
+uns:{n:'Unsupervised',d:'No labels. The model looks for structure by itself: groups, patterns, unusual points, compact representations.',k:'Clustering, dimensionality reduction, anomaly detection, association rules',e:'Customer segmentation, topic discovery, fraud outliers, data compression for plotting',a:'Features X only → Structure'},
+rl:{n:'Reinforcement',d:'An agent acts in an environment and receives rewards or penalties. It learns a policy that maximises long-term reward through trial and error.',k:'Agent, environment, state, action, reward, policy',e:'Game playing, robot control, ad bidding, tuning chat models with human feedback',a:'Action → Reward → Better policy'}};
+const tb=document.getElementById('typeBtns');
+Object.keys(types).forEach((k,i)=>{const b=document.createElement('button');b.className='btn';b.textContent=types[k].n;b.onclick=()=>{[...tb.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');const t=types[k];document.getElementById('typeInfo').innerHTML=`<b style="font-size:19px">${t.n} Learning</b><p>${t.d}</p><p><b>Flow:</b> ${t.a}</p><p><b>Key ideas:</b> ${t.k}</p><p><b>Examples:</b> ${t.e}</p>`};tb.appendChild(b);if(!i)b.click()});
+
+/* spam demo */
+const W={free:1.2,winner:2.0,prize:1.8,claim:1.0,congratulations:1.4,iphone:1.2,lucky:1.3,now:0.6,meeting:-2.0,tomorrow:-1.2,moved:-0.8,parking:-1.6,venue:-1.4,available:-0.9,project:-1.8,report:-1.5,the:-0.1,at:-0.2,pm:-0.7,for:0.0,to:0.0,your:0.3};
+const mail=document.getElementById('mail');
+function spam(){const words=mail.value.toLowerCase().match(/[a-z]+/g)||[];
+ const rule=words.includes('free')||words.includes('winner');
+ document.getElementById('ruleOut').innerHTML=`<span class="verdict ${rule?'spam':'ham'}">${rule?'SPAM':'NOT SPAM'}</span>`;
+ let s=-0.5,chips='';words.forEach(w=>{if(W[w]!==undefined&&W[w]!==0){s+=W[w];chips+=`<span class="${W[w]>0?'pos':'neg'}">${w} ${W[w]>0?'+':''}${W[w]}</span>`}});
+ document.getElementById('mlOut').innerHTML=`<span class="verdict ${s>0?'spam':'ham'}">${s>0?'SPAM':'NOT SPAM'}</span> <b>score ${s.toFixed(1)}</b><div class="chips" style="margin-top:8px">${chips||'<i>no known words</i>'}</div>`}
+mail.addEventListener('input',spam);document.querySelectorAll('[data-ex]').forEach(b=>b.onclick=()=>{mail.value=b.dataset.ex;spam()});spam();
+
+/* game */
+const G=[
+['Predict the selling price of a house from its area and location','sup','Labels (past prices) exist and the target is a number: supervised regression.'],
+['Group customers into segments without any predefined categories','uns','No labels, we want structure: unsupervised clustering.'],
+['A robot learns to walk by trial, error and a reward for staying upright','rl','Reward signal and trial and error: reinforcement learning.'],
+['Flag a transaction as fraud, using thousands of past transactions marked fraud or genuine','sup','Past labelled examples: supervised classification.'],
+['Reduce 200 features to 2 so the data can be plotted','uns','Dimensionality reduction needs no labels: unsupervised.'],
+['An agent learns to maximise its score in a video game','rl','Score is the reward and the agent acts in an environment: reinforcement learning.'],
+['Predict whether a student will pass, based on attendance and past marks','sup','The label pass/fail is known for past students: supervised classification.'],
+['Discover themes across 10,000 unlabelled news articles','uns','No topic labels given: unsupervised (topic modelling).']];
+let gi=0,gs=0,locked=false;
+function gShow(){locked=false;document.getElementById('gQ').textContent=`${gi+1}. ${G[gi][0]}`;document.getElementById('gFb').textContent='';document.getElementById('gNext').style.display='none'}
+document.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{if(locked)return;locked=true;const ok=b.dataset.a===G[gi][1];if(ok)gs++;document.getElementById('gScore').textContent=gs;
+ document.getElementById('gFb').innerHTML=`<span class="${ok?'ok':'bad'}">${ok?'Correct. ':'Not quite. '}</span>${G[gi][2]}`;
+ const n=document.getElementById('gNext');n.style.display='inline-block';n.textContent=gi===G.length-1?'See result':'Next scenario →'});
+document.getElementById('gNext').onclick=()=>{if(gi===G.length-1){document.getElementById('gQ').textContent=`Final score: ${gs} / ${G.length}`;document.getElementById('gFb').textContent=gs>=7?'Excellent. You have the three paradigms clear.':'Revisit the Three Ways Machines Learn section and try again.';document.getElementById('gNext').textContent='Play again';document.getElementById('gNext').onclick=()=>location.reload();return}gi++;gShow()};
+gShow();
+
+/* quiz */
+const Q=[
+['Which term is the broadest?',['Deep Learning','Machine Learning','Artificial Intelligence','Generative AI'],2,'AI is the umbrella. ML, DL and GenAI sit inside it.'],
+['What is the key difference between ML and traditional programming?',['ML needs no data','Rules are learned from data instead of written by hand','ML only works on images','ML cannot make mistakes'],1,'Traditional: data + rules → answers. ML: data + answers → rules.'],
+['Deep learning is best described as…',['A rule-based expert system','A subset of ML using multi-layer neural networks','A type of database','Another name for statistics'],1,'DL = neural networks with many layers that learn features automatically.'],
+['Grouping customers with no labels is an example of…',['Supervised learning','Unsupervised learning','Reinforcement learning','Rule-based AI'],1,'No labels, find structure: unsupervised clustering.'],
+['Why did AI winters happen?',['Computers became too fast','Results failed to match the hype, so funding was cut','Nobody had electricity','Neural networks were banned'],1,'Over-promising plus limited data and compute caused disappointment and funding cuts.']];
+const qb=document.getElementById('quiz');let done=0,right=0;
+Q.forEach((q,i)=>{const d=document.createElement('div');d.className='q';d.innerHTML=`<p>${i+1}. ${q[0]}</p>`+q[1].map((o,j)=>`<label><input type="radio" name="q${i}" value="${j}"> ${o}</label>`).join('')+'<div class="ex"></div>';
+ d.querySelectorAll('input').forEach(inp=>inp.onchange=()=>{if(d.dataset.done)return;d.dataset.done=1;done++;const ok=+inp.value===q[2];if(ok)right++;d.querySelector('.ex').innerHTML=`<span class="${ok?'ok':'bad'}">${ok?'Correct. ':'Not quite. '}</span>${q[3]}`;d.querySelectorAll('input').forEach(x=>x.disabled=true);if(done===Q.length)document.getElementById('qScore').textContent=`Quiz score: ${right} / ${Q.length}`});
+ qb.appendChild(d)});
+</script>
+</body>
+</html>
