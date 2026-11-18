@@ -3,9 +3,12 @@ import pandas as pd
 from matplotlib import pyplot as plt
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.metrics import confusion_matrix, recall_score, precision_score, accuracy_score, ConfusionMatrixDisplay
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import confusion_matrix, recall_score, precision_score, accuracy_score, ConfusionMatrixDisplay, \
+    classification_report
 from IPython.display import display
+from warnings import filterwarnings
+filterwarnings("ignore")
 
 # 1. Load and inspect (Section 9 Hands-On Bridge)
 df = pd.read_csv("customer_churn_preprocessing_extended.csv")
@@ -65,7 +68,6 @@ y_pred = model.predict(X_test)
 # print confusion matrix
 print(confusion_matrix(y_test, y_pred))
 # 2. Compute the confusion matrix
-class_names = ["Churned", "Retained"]
 cm = confusion_matrix(y_test, y_pred)
 
 # 3. Plot the matrix
@@ -78,3 +80,5 @@ print(recall_score(y_test, y_pred))
 print(precision_score(y_test, y_pred))
 
 print(accuracy_score(y_test, y_pred))
+
+print(classification_report(y_test, y_pred))
